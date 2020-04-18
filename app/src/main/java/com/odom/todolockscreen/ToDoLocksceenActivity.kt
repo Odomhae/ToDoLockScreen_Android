@@ -23,22 +23,11 @@ import android.R.attr.bottom
 import android.graphics.Rect
 import androidx.annotation.NonNull
 import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.core.app.ComponentActivity.ExtraData
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-
-
-
-
-
-
-
-
-
-
-
-
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 
 
 class ToDoLocksceenActivity : AppCompatActivity() {
@@ -46,7 +35,6 @@ class ToDoLocksceenActivity : AppCompatActivity() {
     // 빈 데이터 리스트 생성.
     val lockScreenItems = ArrayList<String>()
     val adapter by lazy {  ArrayAdapter(this, android.R.layout.simple_list_item_multiple_choice, lockScreenItems) }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,20 +57,17 @@ class ToDoLocksceenActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_to_do_locksceen)
 
-
-
-        val callback = SimpleItemTouchHelperCallback()
-        val touchHelper = ItemTouchHelper(callback)
-        touchHelper.attachToRecyclerView(recyclerView)
-
-
-//        lockScreenListView.adapter = adapter
-//        lockScreenListView.choiceMode = ListView.CHOICE_MODE_MULTIPLE
-
-
         val listPref =  getStringArrayPref("listData")
         for (value in listPref)
             lockScreenItems.add(value)
+
+        recyclerView.adapter = MyAdapter(listPref)
+
+        initView()
+    }
+
+    fun initView(){
+        Log.d("TAG", "리사이클 뷰 초기화")
 
         // 구분선 넣기
         val dividerItemDecoration =
@@ -94,10 +79,48 @@ class ToDoLocksceenActivity : AppCompatActivity() {
         val spaceDecoration = VerticalSpaceItemDecoration(20)
         recyclerView.addItemDecoration(spaceDecoration)
 
-
-        recyclerView.adapter = MyAdapter(listPref)
         recyclerView.layoutManager = LinearLayoutManager(this)
-       // recyclerView.addItemDecoration(VerticalSpaceItemDecoration(30)  )
+
+        // ItemTouchHelper 구현 (SDK Version 22부터 사용 가능)
+        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                return true
+            }
+
+            override fun isLongPressDragEnabled(): Boolean {
+                Log.d("TAG", "오래누름")
+                return true
+            }
+
+            override fun isItemViewSwipeEnabled(): Boolean {
+                Log.d("TAG", "위치바꿈")
+                return true
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                // Adapter에 아이템 삭제 요청
+                Log.d("TAG", "지워")
+                //잠금화면에서 지우고
+                (recyclerView.adapter as MyAdapter).deleteList(viewHolder.adapterPosition)
+
+                // 배열에서도 지우고
+                Log.d("TAG", "배열에서도 지워")
+                //1번째 4번째는 아니고
+                //중간에 2개
+                Log.d("TAG",  viewHolder.adapterPosition.toString())
+                Log.d("TAG",  viewHolder.layoutPosition.toString())
+                Log.d("TAG",  viewHolder.position.toString()) // 모호하다고 deprecated됨
+                Log.d("TAG",  viewHolder.oldPosition.toString())
+
+                lockScreenItems.removeAt(viewHolder.layoutPosition)
+                setStringArrayPref("listData", lockScreenItems)
+            }
+        }).apply {
+
+            // ItemTouchHelper에 RecyclerView 설정
+            attachToRecyclerView(recyclerView)
+        }
+
     }
 
     inner class VerticalSpaceItemDecoration(private val verticalSpaceHeight: Int) :
@@ -123,6 +146,14 @@ class ToDoLocksceenActivity : AppCompatActivity() {
             return datas.size
         }
 
+        // 삭제
+        fun deleteList(position: Int){
+            datas.removeAt(position)
+
+            Log.d("T삭제샹", position.toString())
+            notifyDataSetChanged()
+        }
+
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             Log.d("TAG" , "onBind")
             holder.textField.text = datas[position]
@@ -137,52 +168,6 @@ class ToDoLocksceenActivity : AppCompatActivity() {
     class MyViewHolder(view: View): RecyclerView.ViewHolder(view) {
         var textField = view.chat_title
     }
-
-
-    class SimpleItemTouchHelperCallback : ItemTouchHelper.Callback() {
-
-        var mAdapter : ItemTouchHelperAdapter ?= null
-
-        fun ItemSwipeHelperCallback(adapter: ItemTouchHelperAdapter) {
-            mAdapter = adapter
-        }
-
-        override fun isLongPressDragEnabled(): Boolean {
-            return true
-        }
-
-        override fun isItemViewSwipeEnabled(): Boolean {
-            return true
-        }
-
-        override fun getMovementFlags(
-            recyclerView: RecyclerView,
-            viewHolder: RecyclerView.ViewHolder
-        ): Int {
-            val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
-            val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
-            return makeMovementFlags(dragFlags, swipeFlags)
-        }
-
-        override fun onMove(
-            recyclerView: RecyclerView,
-            viewHolder: RecyclerView.ViewHolder,
-            target: RecyclerView.ViewHolder
-        ): Boolean {
-            mAdapter?.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
-            return true
-        }
-
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            mAdapter?.onItemDismiss(viewHolder.adapterPosition)
-        }
-    }
-
-    interface ItemTouchHelperAdapter {
-        fun onItemMove(fromPosition: Int, toPosition: Int)
-        fun onItemDismiss(position: Int)
-    }
-
 
 
 
