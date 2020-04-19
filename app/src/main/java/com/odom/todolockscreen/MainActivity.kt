@@ -1,23 +1,30 @@
 package com.odom.todolockscreen
 
+import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.ArrayAdapter
-import android.widget.ListView
-import android.widget.Toast
+import android.view.View
+import android.widget.*
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONArray
 import org.json.JSONException
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
+import android.view.LayoutInflater
+
+
 
 class MainActivity : AppCompatActivity() {
 
     // 빈 데이터 리스트 생성.
     val items = ArrayList<String>()
     //  하나의? 여려개 선택도 가능한게 나은데 // 이 가능한  adapter 설정
-    val adapter by lazy {  ArrayAdapter(this, android.R.layout.simple_list_item_multiple_choice, items) }
+    val adapter by lazy {  ArrayAdapter(this, android.R.layout.select_dialog_multichoice, items) } // simple_list_item_multiple_choice
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +39,17 @@ class MainActivity : AppCompatActivity() {
         // ArrayAdapter 생성. 아이템 View를 선택(single choice)가능하도록 만듦.
         listView.adapter = adapter
         listView.choiceMode = ListView.CHOICE_MODE_MULTIPLE
+
+        listView.setOnItemClickListener { parent, view, position, id ->
+            Log.d("TAG", "클릭")
+            Log.d("TAG", parent.toString())
+            Log.d("TAG", view.toString())
+            Log.d("TAG", position.toString())
+            Log.d("TAG", id.toString())
+
+            showBox(items, position)
+            setStringArrayPref("listData", items)
+        }
 
         //할일 추가
         addListButton.setOnClickListener {
@@ -90,6 +108,40 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
+
+    // 알림 박스에서 항목 수정 .. 필요한 기능인가?
+    fun showBox(list :ArrayList<String>, position :Int) {
+        Log.d("TAG", "show box")
+        // val dia = AlertDialog.Builder(this)
+        val mDialogView = LayoutInflater.from(this).inflate(R.layout.input_box, null)
+        //AlertDialogBuilder
+        val mBuilder = AlertDialog.Builder(this)
+            .setView(mDialogView)
+            .setTitle("Login Form")
+
+        var txtMessage = mDialogView.findViewById(R.id.txtmessage) as TextView
+        txtMessage.text = "Update item"
+        txtMessage.setTextColor(Color.parseColor("#ff2222"))
+
+        val bt = mDialogView.findViewById(R.id.btdone) as Button
+        bt.setBackgroundColor(resources.getColor(android.R.color.holo_blue_light))
+
+        val editText = mDialogView.findViewById(R.id.txtinput) as EditText
+        editText.setText(list[position])
+
+        //show dialog
+        val mAlertDialog = mBuilder.show()
+        //login button click of custom layout
+        bt.setOnClickListener {
+            list[position] = editText.text.toString()
+            setStringArrayPref("listData", list)
+            adapter.notifyDataSetChanged()
+            //dismiss dialog
+            mAlertDialog.dismiss()
+        }
+    }
+
 
     // 할일 추가버튼 함수
     private fun addList(){

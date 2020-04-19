@@ -20,15 +20,10 @@ import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_to_do_locksceen.view.*
 import android.R.attr.bottom
+import android.content.DialogInterface
 import android.graphics.Rect
-import androidx.annotation.NonNull
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-
+import androidx.recyclerview.widget.DividerItemDecoration
 
 class ToDoLocksceenActivity : AppCompatActivity() {
 
@@ -99,21 +94,44 @@ class ToDoLocksceenActivity : AppCompatActivity() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 // Adapter에 아이템 삭제 요청
-                Log.d("TAG", "지워")
-                //잠금화면에서 지우고
-                (recyclerView.adapter as MyAdapter).deleteList(viewHolder.adapterPosition)
 
-                // 배열에서도 지우고
-                Log.d("TAG", "배열에서도 지워")
-                //1번째 4번째는 아니고
-                //중간에 2개
-                Log.d("TAG",  viewHolder.adapterPosition.toString())
-                Log.d("TAG",  viewHolder.layoutPosition.toString())
-                Log.d("TAG",  viewHolder.position.toString()) // 모호하다고 deprecated됨
-                Log.d("TAG",  viewHolder.oldPosition.toString())
+                val builder = AlertDialog.Builder(this@ToDoLocksceenActivity)
 
-                lockScreenItems.removeAt(viewHolder.layoutPosition)
-                setStringArrayPref("listData", lockScreenItems)
+                builder.setTitle("11")
+                    .setMessage("22")
+                    .setPositiveButton("지운다",
+                        DialogInterface.OnClickListener { dialog, id ->
+                            Log.d("TAG", "지워")
+                            //잠금화면에서 지우고
+                            (recyclerView.adapter as MyAdapter).deleteList(viewHolder.adapterPosition)
+
+                            lockScreenItems.removeAt(viewHolder.layoutPosition)
+                            setStringArrayPref("listData", lockScreenItems)
+                        }  )
+                    .setNegativeButton("안 지운다",
+                        DialogInterface.OnClickListener { dialog, id ->
+
+                        })
+
+                val alertDialog = builder.create()
+
+                alertDialog.show()
+
+//                Log.d("TAG", "지워")
+//                //잠금화면에서 지우고
+//                (recyclerView.adapter as MyAdapter).deleteList(viewHolder.adapterPosition)
+//
+//                // 배열에서도 지우고
+//                Log.d("TAG", "배열에서도 지워")
+//                //1번째 4번째는 아니고
+//                //중간에 2개
+//                Log.d("TAG",  viewHolder.adapterPosition.toString())
+//                Log.d("TAG",  viewHolder.layoutPosition.toString())
+//                Log.d("TAG",  viewHolder.position.toString()) // 모호하다고 deprecated됨
+//                Log.d("TAG",  viewHolder.oldPosition.toString())
+//
+//                lockScreenItems.removeAt(viewHolder.layoutPosition)
+//                setStringArrayPref("listData", lockScreenItems)
             }
         }).apply {
 
