@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.preference.PreferenceFragment
 import android.preference.SwitchPreference
 import android.util.Log
+import kotlinx.android.synthetic.main.activity_setting.*
 
 class SettingActivity : AppCompatActivity() {
 
@@ -17,6 +18,10 @@ class SettingActivity : AppCompatActivity() {
         setContentView(R.layout.activity_setting)
 
         fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit()
+
+        closeImage.setOnClickListener {
+            finish()
+        }
     }
 
     class MyPreferenceFragment : PreferenceFragment(){

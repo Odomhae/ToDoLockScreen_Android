@@ -118,7 +118,7 @@ class MainActivity : AppCompatActivity() {
         //AlertDialogBuilder
         val mBuilder = AlertDialog.Builder(this)
             .setView(mDialogView)
-            .setTitle("Login Form")
+            .setTitle("수정하기")
 
         var txtMessage = mDialogView.findViewById(R.id.txtmessage) as TextView
         txtMessage.text = "Update item"

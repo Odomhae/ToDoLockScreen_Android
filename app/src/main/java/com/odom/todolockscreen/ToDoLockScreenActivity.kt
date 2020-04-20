@@ -5,11 +5,6 @@ import android.content.Context
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
-import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_to_do_locksceen.*
 import org.json.JSONArray
@@ -19,17 +14,29 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_to_do_locksceen.view.*
-import android.R.attr.bottom
 import android.content.DialogInterface
+import android.graphics.Color
 import android.graphics.Rect
+import android.preference.PreferenceFragment
+import android.preference.SwitchPreference
+import android.view.*
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.DividerItemDecoration
+import java.util.*
+import kotlin.collections.ArrayList
+import android.view.animation.AnimationUtils
+import android.view.animation.LayoutAnimationController
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.view.animation.Animation
 
-class ToDoLocksceenActivity : AppCompatActivity() {
+
+class ToDoLockScreenActivity : AppCompatActivity() {
 
     // 빈 데이터 리스트 생성.
     val lockScreenItems = ArrayList<String>()
-    val adapter by lazy {  ArrayAdapter(this, android.R.layout.simple_list_item_multiple_choice, lockScreenItems) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,13 +60,35 @@ class ToDoLocksceenActivity : AppCompatActivity() {
         setContentView(R.layout.activity_to_do_locksceen)
 
         val listPref =  getStringArrayPref("listData")
-        for (value in listPref)
-            lockScreenItems.add(value)
+        // 리스트 비었으면
+        if(listPref.size ==0){
+            Log.d("TAG", "할일 없음 ")
+           // Toast.makeText(applicationContext, "끝 다함", Toast.LENGTH_SHORT).show()
+            finish()
+        }
+        else{
+            for (value in listPref)
+                lockScreenItems.add(value)
 
-        recyclerView.adapter = MyAdapter(listPref)
+            recyclerView.adapter = MyAdapter(listPref)
 
-        initView()
+//            val resId = R.anim.layout_animation_fall_down
+//            val animation = AnimationUtils.loadLayoutAnimation(applicationContext , resId)
+//            recyclerView.layoutAnimation = animation
+
+            val context : Context = recyclerView.context
+            val controller :LayoutAnimationController =
+                AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_fall_down)
+
+            recyclerView.layoutAnimation = controller
+            //notifyDataSetChanged()
+            recyclerView.scheduleLayoutAnimation()
+
+            initView()
+        }
+
     }
+
 
     fun initView(){
         Log.d("TAG", "리사이클 뷰 초기화")
@@ -67,39 +96,41 @@ class ToDoLocksceenActivity : AppCompatActivity() {
         // 구분선 넣기
         val dividerItemDecoration =
             DividerItemDecoration(recyclerView.context, LinearLayoutManager(this).orientation)
-
         recyclerView.addItemDecoration(dividerItemDecoration)
 
-        // 간격
-        val spaceDecoration = VerticalSpaceItemDecoration(20)
+        // 간격 30
+        val spaceDecoration = VerticalSpaceItemDecoration(30)
         recyclerView.addItemDecoration(spaceDecoration)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         // ItemTouchHelper 구현 (SDK Version 22부터 사용 가능)
-        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+                        or ItemTouchHelper.UP or ItemTouchHelper.DOWN
+           ) {
+
+            // 위치 swap
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                Log.d("TAG", "위치 바꿉시다")
+                MyAdapter(lockScreenItems).swap(viewHolder.adapterPosition, target.adapterPosition)
                 return true
             }
 
             override fun isLongPressDragEnabled(): Boolean {
                 Log.d("TAG", "오래누름")
-                return true
+                return false
             }
-
             override fun isItemViewSwipeEnabled(): Boolean {
-                Log.d("TAG", "위치바꿈")
                 return true
             }
 
+            //밀어서 삭제
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 // Adapter에 아이템 삭제 요청
-
-                val builder = AlertDialog.Builder(this@ToDoLocksceenActivity)
-
-                builder.setTitle("11")
-                    .setMessage("22")
-                    .setPositiveButton("지운다",
+                val builder = AlertDialog.Builder(this@ToDoLockScreenActivity)
+                builder.setTitle("해당 일을 완료했습니끼?")
+                    .setMessage("예를 누르면 리스트에서 삭제됩니다")
+                    .setPositiveButton("예",
                         DialogInterface.OnClickListener { dialog, id ->
                             Log.d("TAG", "지워")
                             //잠금화면에서 지우고
@@ -107,37 +138,54 @@ class ToDoLocksceenActivity : AppCompatActivity() {
 
                             lockScreenItems.removeAt(viewHolder.layoutPosition)
                             setStringArrayPref("listData", lockScreenItems)
-                        }  )
-                    .setNegativeButton("안 지운다",
+
+                            if(lockScreenItems.size == 0){
+                                Toast.makeText(applicationContext, "끝 다함22", Toast.LENGTH_SHORT).show()
+                                // 스위치 끄기
+                                Log.d("TAG","스위치 끄기 1")
+//                                val fragment = pp()
+//                                fragment.off()
+
+
+                                //화면 종료
+                                finish()
+                            }
+
+                        })
+                    .setNegativeButton("아니요",
                         DialogInterface.OnClickListener { dialog, id ->
+                            initView()
 
                         })
 
                 val alertDialog = builder.create()
 
                 alertDialog.show()
-
-//                Log.d("TAG", "지워")
-//                //잠금화면에서 지우고
-//                (recyclerView.adapter as MyAdapter).deleteList(viewHolder.adapterPosition)
-//
-//                // 배열에서도 지우고
-//                Log.d("TAG", "배열에서도 지워")
-//                //1번째 4번째는 아니고
-//                //중간에 2개
-//                Log.d("TAG",  viewHolder.adapterPosition.toString())
-//                Log.d("TAG",  viewHolder.layoutPosition.toString())
-//                Log.d("TAG",  viewHolder.position.toString()) // 모호하다고 deprecated됨
-//                Log.d("TAG",  viewHolder.oldPosition.toString())
-//
-//                lockScreenItems.removeAt(viewHolder.layoutPosition)
-//                setStringArrayPref("listData", lockScreenItems)
             }
         }).apply {
 
             // ItemTouchHelper에 RecyclerView 설정
             attachToRecyclerView(recyclerView)
         }
+    }
+
+
+
+    class pp : PreferenceFragment(){
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+
+            addPreferencesFromResource(R.xml.pref)
+        }
+
+        fun off(){
+            Log.d("TAG","스위치 끄기 2")
+            val useLockScreenPref2 :SwitchPreference = findPreference("useLockScreen") as SwitchPreference
+            if(useLockScreenPref2.isChecked){
+                useLockScreenPref2.isChecked = false
+            }
+        }
+
 
     }
 
@@ -148,6 +196,12 @@ class ToDoLocksceenActivity : AppCompatActivity() {
             outRect: Rect, view: View, parent: RecyclerView,
             state: RecyclerView.State
         ) {
+            // 첫번째면 위에도 여백
+            if(parent.getChildAdapterPosition(view) == 0){
+                outRect.top = verticalSpaceHeight
+                //return
+            }
+
             outRect.bottom = verticalSpaceHeight
         }
     }
@@ -157,11 +211,22 @@ class ToDoLocksceenActivity : AppCompatActivity() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.activity_to_do_locksceen, parent, false)
             Log.d("TAG" , "onCreateViewHolder")
+
             return MyViewHolder(view)
         }
 
         override fun getItemCount(): Int {
             return datas.size
+        }
+
+
+
+        fun swap(firstPosition :Int, secondPosition : Int) {
+            Log.d("위치변경 ", firstPosition.toString())
+            Log.d("위치변경 ", secondPosition.toString())
+
+            Collections.swap(datas, firstPosition, secondPosition)
+            notifyItemMoved(firstPosition, secondPosition)
         }
 
         // 삭제
@@ -172,22 +237,35 @@ class ToDoLocksceenActivity : AppCompatActivity() {
             notifyDataSetChanged()
         }
 
+
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             Log.d("TAG" , "onBind")
             holder.textField.text = datas[position]
 
+            // 각 아이템 색
+            holder.itemView.setBackgroundColor(Color.GRAY)
+            // 각 아이템 모양
+            holder.itemView.setBackgroundResource(R.drawable.item_view)
+            
+//            holder.itemView.setOnTouchListener{ v, event ->
+//               if(event.action == MotionEvent.ACTION_DOWN )
+//                   mStartDragListener.requestDrag(holder)
+//                else if(event.action == MotionEvent.ACTION_UP)
+//                   mStartDragListener.requestDrag(holder)
+//
+//            }
+
+
             // 폭 설정
             val layoutParams = holder.itemView.layoutParams
-            layoutParams.height = 100
+            layoutParams.height = 120
             holder.itemView.requestLayout()
         }
     }
 
     class MyViewHolder(view: View): RecyclerView.ViewHolder(view) {
-        var textField = view.chat_title
+        var textField = view.recyclerview_text
     }
-
-
 
     // JSON 배열로 저장
     fun setStringArrayPref(key: String, values: ArrayList<String>) {

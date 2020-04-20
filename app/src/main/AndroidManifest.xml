@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ToDoLocksceenActivity"></activity>
+        <activity android:name=".ToDoLockScreenActivity"></activity>
         <activity android:name=".SettingActivity" />
 
         <service
