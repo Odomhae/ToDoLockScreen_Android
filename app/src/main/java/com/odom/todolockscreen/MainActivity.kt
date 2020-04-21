@@ -42,10 +42,6 @@ class MainActivity : AppCompatActivity() {
 
         listView.setOnItemClickListener { parent, view, position, id ->
             Log.d("TAG", "클릭")
-            Log.d("TAG", parent.toString())
-            Log.d("TAG", view.toString())
-            Log.d("TAG", position.toString())
-            Log.d("TAG", id.toString())
 
             showBox(items, position)
             setStringArrayPref("listData", items)

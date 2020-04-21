@@ -15,13 +15,6 @@
             android:entries="@android:array/organizationTypes"
             android:entryValues="@android:array/organizationTypes"
             android:key="list_preference_1"
-            android:title="글자크기" />
-
-        <ListPreference
-            android:defaultValue="1"
-            android:entries="@android:array/organizationTypes"
-            android:entryValues="@android:array/organizationTypes"
-            android:key="list_preference_1"
             android:title="글자색" />
 
         <ListPreference

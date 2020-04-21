@@ -246,6 +246,7 @@ class ToDoLockScreenActivity : AppCompatActivity() {
             holder.itemView.setBackgroundColor(Color.GRAY)
             // 각 아이템 모양
             holder.itemView.setBackgroundResource(R.drawable.item_view)
+            holder.itemView.isSelected = false
             
 //            holder.itemView.setOnTouchListener{ v, event ->
 //               if(event.action == MotionEvent.ACTION_DOWN )
