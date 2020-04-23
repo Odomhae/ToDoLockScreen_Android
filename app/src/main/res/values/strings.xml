@@ -1,3 +1,48 @@
 <resources>
     <string name="app_name">TodoLockscreen</string>
+
+    <string name="colorWhite">White</string>
+    <string name="colorGray">Gray</string>
+    <string name="colorBlack">Black</string>
+    <string name="colorRed">Red</string>
+    <string name="colorCrimson">Crimson</string>
+    <string name="colorSalmon">Salmon</string>
+    <string name="colorBeige">Beige</string>
+    <string name="colorOrange">Orange</string>
+    <string name="colorBrown">Brown</string>
+    <string name="colorWalnut">Walnut</string>
+    <string name="colorBlue">Blue</string>
+    <string name="colorMalibu">Malibu</string>
+    <string name="colorGreen">Green</string>
+    <string name="colorYellowGreen">Yellow Green</string>
+    <string name="colorMint">Mint</string>
+    <string name="colorYellow">Yellow</string>
+    <string name="colorPink">Pink</string>
+    <string name="colorViolet">Violet</string>
+    <string name="colorMagenta">Magenta</string>
+    <string name="colorPurple">Purple</string>
+
+    <string-array name="colorCategory">
+        <item>@string/colorWhite</item>
+        <item>@string/colorGray</item>
+        <item>@string/colorBlack</item>
+        <item>@string/colorRed</item>
+        <item>@string/colorCrimson</item>
+        <item>@string/colorSalmon</item>
+        <item>@string/colorBeige</item>
+        <item>@string/colorOrange</item>
+        <item>@string/colorBrown</item>
+        <item>@string/colorWalnut</item>
+        <item>@string/colorBlue</item>
+        <item>@string/colorMalibu</item>
+        <item>@string/colorGreen</item>
+        <item>@string/colorYellowGreen</item>
+        <item>@string/colorMint</item>
+        <item>@string/colorYellow</item>
+        <item>@string/colorPink</item>
+        <item>@string/colorViolet</item>
+        <item>@string/colorMagenta</item>
+        <item>@string/colorPurple</item>
+    </string-array>
+
 </resources>

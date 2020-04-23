@@ -19,9 +19,9 @@
 
         <ListPreference
             android:defaultValue="1"
-            android:entries="@android:array/organizationTypes"
-            android:entryValues="@android:array/organizationTypes"
-            android:key="list_preference_1"
+            android:entries="@array/colorCategory"
+            android:entryValues="@array/colorCategory"
+            android:key="backgroundColorCategory"
             android:title="배경색" />
 
     </PreferenceCategory>

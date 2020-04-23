@@ -69,6 +69,8 @@ class LockScreenService :Service(){
             val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
             val intent2 = Intent(this, SettingActivity::class.java)
             val pendingIntent2 = PendingIntent.getActivity(this, 0, intent2, 0)
+
+            builder.setContentIntent(pendingIntent)
             builder.addAction(android.R.drawable.ic_menu_view, "view", pendingIntent)
             builder.addAction(android.R.drawable.ic_menu_view, "setting", pendingIntent2)
 

@@ -1,9 +1,11 @@
 package com.odom.todolockscreen
 
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.preference.ListPreference
 import android.preference.PreferenceFragment
 import android.preference.SwitchPreference
 import android.util.Log
@@ -25,12 +27,32 @@ class SettingActivity : AppCompatActivity() {
     }
 
     class MyPreferenceFragment : PreferenceFragment(){
+
+        fun setInts(context: Context, key : String, value : Int) {
+            val prefs = context.getSharedPreferences("SETTINGS", Context.MODE_PRIVATE)
+            val editor = prefs!!.edit()
+            editor.putInt(key, value).apply()
+        }
+
+        val ss  by lazy { findPreference("useLockScreen") as SwitchPreference}
+
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
 
             // 환경설정 리소스 파일
             // xml 폴더의 pref 파일
             addPreferencesFromResource(R.xml.pref)
+
+            // 배경색
+            val backgroundColorCategoryPref = findPreference("backgroundColorCategory") as ListPreference
+            backgroundColorCategoryPref.setOnPreferenceChangeListener { preference, newValue ->
+                val index = backgroundColorCategoryPref.findIndexOfValue(newValue.toString())
+                setInts(context, "backgroundColor", index)
+                backgroundColorCategoryPref.summary = backgroundColorCategoryPref.entries[index]
+                Log.d("선택한 배경색", backgroundColorCategoryPref.summary.toString())
+                true
+            }
+
 
             // 잠금화면 사용 스위치 객체 사용
             // useLockScreen키로 찾음
@@ -63,7 +85,17 @@ class SettingActivity : AppCompatActivity() {
                 }
 
             }
+
         }
+
+        fun offLockScreen(){
+            Log.d("ㅋㅋㅋ","스위치 끄기zz되나")
+            //  val useLockScreenPref2 = findPreference("useLockScreen") as SwitchPreference
+            if(ss.isChecked)
+                ss.isChecked = false
+        }
+
+
 
     }
 }
