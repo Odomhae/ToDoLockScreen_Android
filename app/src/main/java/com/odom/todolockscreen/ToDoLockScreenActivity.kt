@@ -1,5 +1,7 @@
 package com.odom.todolockscreen
 
+import android.app.Activity
+import android.app.ActivityManager
 import android.app.KeyguardManager
 import android.content.Context
 import android.os.Build
@@ -15,6 +17,8 @@ import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_to_do_locksceen.view.*
 import android.content.DialogInterface
+import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Rect
 import android.preference.PreferenceFragment
@@ -30,13 +34,22 @@ import android.view.animation.LayoutAnimationController
 import androidx.core.app.ComponentActivity.ExtraData
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.preference.PreferenceManager
 import android.view.animation.Animation
+import android.widget.Button
+import androidx.core.app.ActivityCompat
+import androidx.core.os.bundleOf
+import kotlinx.android.synthetic.main.ask_box.*
+import kotlin.system.exitProcess
 
 
 class ToDoLockScreenActivity : AppCompatActivity() {
 
     // 빈 데이터 리스트 생성.
     val lockScreenItems = ArrayList<String>()
+
+    var finn = false
+    var finBt = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +76,7 @@ class ToDoLockScreenActivity : AppCompatActivity() {
         // 리스트 비었으면
         if(listPref.size ==0){
             Log.d("TAG", "할일 없음 ")
-           // Toast.makeText(applicationContext, "끝 다함", Toast.LENGTH_SHORT).show()
+            // Toast.makeText(applicationContext, "끝 다함", Toast.LENGTH_SHORT).show()
             finish()
         }
         else{
@@ -72,19 +85,9 @@ class ToDoLockScreenActivity : AppCompatActivity() {
 
             recyclerView.adapter = MyAdapter(listPref)
 
-//            val resId = R.anim.layout_animation_fall_down
-//            val animation = AnimationUtils.loadLayoutAnimation(applicationContext , resId)
-//            recyclerView.layoutAnimation = animation
-
-            val context : Context = recyclerView.context
-            val controller :LayoutAnimationController =
-                AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_fall_down)
-
-            recyclerView.layoutAnimation = controller
-            //notifyDataSetChanged()
-            recyclerView.scheduleLayoutAnimation()
-
-            recyclerview_text.setTextColor(resources.getColor(R.color.colorCrimson))
+            // 간격 30
+            val spaceDecoration = VerticalSpaceItemDecoration(30)
+            recyclerView.addItemDecoration(spaceDecoration)
 
             initView()
         }
@@ -101,11 +104,11 @@ class ToDoLockScreenActivity : AppCompatActivity() {
     fun initView(){
         Log.d("TAG", "리사이클 뷰 초기화")
 
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
         // 배경색, 글자색
         val backgroundColor = getInt("backgroundColor")
         val textColor = getInt("textColor")
-
-        recyclerview_text.setTextColor(resources.getColor(R.color.colorCrimson))
 
         when(backgroundColor){
             0 -> {
@@ -197,16 +200,10 @@ class ToDoLockScreenActivity : AppCompatActivity() {
 
         }
 
-        // 간격 30
-        val spaceDecoration = VerticalSpaceItemDecoration(30)
-        recyclerView.addItemDecoration(spaceDecoration)
-
-        recyclerView.layoutManager = LinearLayoutManager(this)
+//        var finn = false
 
         // ItemTouchHelper 구현 (SDK Version 22부터 사용 가능)
-        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-                        or ItemTouchHelper.UP or ItemTouchHelper.DOWN
-           ) {
+        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
             // 위치 swap
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
@@ -226,40 +223,56 @@ class ToDoLockScreenActivity : AppCompatActivity() {
             //밀어서 삭제
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 // Adapter에 아이템 삭제 요청
-                val builder = AlertDialog.Builder(this@ToDoLockScreenActivity)
-                builder.setTitle("해당 일을 완료했습니끼?")
-                    .setMessage("예를 누르면 리스트에서 삭제됩니다")
-                    .setPositiveButton("예",
-                        DialogInterface.OnClickListener { dialog, id ->
-                            Log.d("TAG", "지워")
-                            //잠금화면에서 지우고
-                            (recyclerView.adapter as MyAdapter).deleteList(viewHolder.adapterPosition)
+                val mDialogView = LayoutInflater.from(this@ToDoLockScreenActivity).inflate(R.layout.ask_box, null)
+                //AlertDialogBuilder
+                val mBuilder = AlertDialog.Builder(this@ToDoLockScreenActivity)
+                    .setView(mDialogView)
+                   // .setTitle("삭제합니다")
 
-                            lockScreenItems.removeAt(viewHolder.layoutPosition)
-                            setStringArrayPref("listData", lockScreenItems)
+                val mAlertDialog = mBuilder.show()
 
-                            if(lockScreenItems.size == 0){
-                                Toast.makeText(applicationContext, "끝 다함22", Toast.LENGTH_SHORT).show()
-                                // 스위치 끄기
-                                Log.d("TAG","스위치 끄기 1")
-                                val fragment = SettingActivity.MyPreferenceFragment()
-                                fragment.offLockScreen()
+                val noBt = mDialogView.findViewById(R.id.noButton) as Button
+                noBt.setOnClickListener {
 
+                    initView()
+                    mAlertDialog.dismiss()
+                }
 
-                                //화면 종료
-                                finish()
-                            }
+                val yesBt = mDialogView.findViewById(R.id.yesButton) as Button
+                yesBt.setOnClickListener {
+                    //잠금화면에서 지우고
+                    (recyclerView.adapter as MyAdapter).deleteList(viewHolder.adapterPosition)
 
-                        })
-                    .setNegativeButton("아니요",
-                        DialogInterface.OnClickListener { dialog, id ->
-                            initView()
+                    lockScreenItems.removeAt(viewHolder.layoutPosition)
+                    setStringArrayPref("listData", lockScreenItems)
 
-                        })
+                    mAlertDialog.dismiss()
 
-                val alertDialog = builder.create()
+                    if(lockScreenItems.size == 0){
+                        finn = true
 
-                alertDialog.show()
+                        //알림 & 화면 종료
+                        val builder = AlertDialog.Builder(this@ToDoLockScreenActivity)
+
+                        builder.setTitle("앱 종료합니다")
+                            .setIcon(R.mipmap.ic_launcher)
+                            .setMessage("더 이상 할 일이 없습니다")
+                            .setPositiveButton("종료 ㄱㄱㄱ",
+                                DialogInterface.OnClickListener { dialog, id ->
+                                    finBt = true
+                                    finish()
+                                })
+                            .setNegativeButton("취소",
+                                DialogInterface.OnClickListener { dialog, id ->
+                                    finish()
+                                })
+
+                        val alertDialog = builder.create()
+                        alertDialog.show()
+                    }
+
+                }
+
             }
         }).apply {
 
@@ -268,23 +281,14 @@ class ToDoLockScreenActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
 
-
-    class pp : PreferenceFragment(){
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
-
-            addPreferencesFromResource(R.xml.pref)
+        // 앱 종료
+        if (finn && finBt){
+            Log.d("TAG","좀 ")
+            exitProcess(0)
         }
-
-        fun off(){
-            Log.d("TAG","스위치 끄기 2")
-            val useLockScreenPref2 = findPreference("useLockScreen") as SwitchPreference
-            if(useLockScreenPref2.isChecked){
-                useLockScreenPref2.isChecked = false
-            }
-        }
-
 
     }
 
@@ -319,7 +323,6 @@ class ToDoLockScreenActivity : AppCompatActivity() {
         }
 
 
-
         fun swap(firstPosition :Int, secondPosition : Int) {
             Log.d("위치변경 ", firstPosition.toString())
             Log.d("위치변경 ", secondPosition.toString())
@@ -340,10 +343,13 @@ class ToDoLockScreenActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             Log.d("TAG" , "onBind")
             holder.textField.text = datas[position]
+          //  holder.textField.setTextColor(Color.parseColor("#f987c5"))
+         //   holder.textField.setTextColor(Color.RED)
 
             // 각 아이템 모양
-            holder.itemView.setBackgroundResource(R.drawable.item_view)
+            holder.itemView.setBackgroundResource(R.drawable.item_view)//  R.color.colorWhite
             holder.itemView.isSelected = true
+
             
 //            holder.itemView.setOnTouchListener{ v, event ->
 //               if(event.action == MotionEvent.ACTION_DOWN )

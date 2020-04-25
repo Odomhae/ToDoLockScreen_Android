@@ -34,8 +34,6 @@ class SettingActivity : AppCompatActivity() {
             editor.putInt(key, value).apply()
         }
 
-        val ss  by lazy { findPreference("useLockScreen") as SwitchPreference}
-
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
 
@@ -73,6 +71,7 @@ class SettingActivity : AppCompatActivity() {
                     // 사용 체크 안됬으면 서비스 중단
                     else -> activity.stopService(Intent(activity, LockScreenService::class.java))
                 }
+
                 true
             }
 
@@ -87,15 +86,6 @@ class SettingActivity : AppCompatActivity() {
             }
 
         }
-
-        fun offLockScreen(){
-            Log.d("ㅋㅋㅋ","스위치 끄기zz되나")
-            //  val useLockScreenPref2 = findPreference("useLockScreen") as SwitchPreference
-            if(ss.isChecked)
-                ss.isChecked = false
-        }
-
-
 
     }
 }

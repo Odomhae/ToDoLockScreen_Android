@@ -2,29 +2,34 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory android:title="잠금화면 설정">
-        <SwitchPreference
-            android:defaultValue="false"
-            android:summaryOff="앱 비활성화됨"
-            android:summaryOn="앱 활성화됨"
-            android:key="useLockScreen"
-            android:title="앱 사용" />
 
-        <ListPreference
-            android:defaultValue="1"
-            android:entries="@android:array/organizationTypes"
-            android:entryValues="@android:array/organizationTypes"
-            android:key="list_preference_1"
-            android:title="글자색" />
+    <SwitchPreference
+        android:defaultValue="false"
+        android:summaryOff="앱 비활성화됨"
+        android:summaryOn="앱 활성화됨"
+        android:key="useLockScreen"
+        android:title="앱 사용" />
 
-        <ListPreference
-            android:defaultValue="1"
-            android:entries="@array/colorCategory"
-            android:entryValues="@array/colorCategory"
-            android:key="backgroundColorCategory"
-            android:title="배경색" />
+    <ListPreference
+        android:defaultValue="1"
+        android:entries="@android:array/organizationTypes"
+        android:entryValues="@android:array/organizationTypes"
+        android:key="list_preference_1"
+        android:title="글자색" />
 
-    </PreferenceCategory>
+    <ListPreference
+        android:defaultValue="1"
+        android:entries="@android:array/organizationTypes"
+        android:entryValues="@android:array/organizationTypes"
+        android:key="list_preference_1"
+        android:title="리스트 색" />
+
+    <ListPreference
+        android:defaultValue="1"
+        android:entries="@array/colorCategory"
+        android:entryValues="@array/colorCategory"
+        android:key="backgroundColorCategory"
+        android:title="배경색" />
 
 
 </PreferenceScreen>
