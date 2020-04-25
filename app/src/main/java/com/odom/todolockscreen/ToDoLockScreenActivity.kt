@@ -17,29 +17,14 @@ import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_to_do_locksceen.view.*
 import android.content.DialogInterface
-import android.content.Intent
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Rect
-import android.preference.PreferenceFragment
-import android.preference.SwitchPreference
 import android.view.*
-import android.widget.Toast
+import android.widget.Button
 import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.DividerItemDecoration
+import kotlinx.android.synthetic.main.ask_box.*
 import java.util.*
 import kotlin.collections.ArrayList
-import android.view.animation.AnimationUtils
-import android.view.animation.LayoutAnimationController
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import android.preference.PreferenceManager
-import android.view.animation.Animation
-import android.widget.Button
-import androidx.core.app.ActivityCompat
-import androidx.core.os.bundleOf
-import kotlinx.android.synthetic.main.ask_box.*
 import kotlin.system.exitProcess
 
 
@@ -50,6 +35,9 @@ class ToDoLockScreenActivity : AppCompatActivity() {
 
     var finn = false
     var finBt = false
+
+    var a = 1
+    var b = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,12 +59,12 @@ class ToDoLockScreenActivity : AppCompatActivity() {
         }
 
         setContentView(R.layout.activity_to_do_locksceen)
+        swipeToFinish()
 
         val listPref =  getStringArrayPref("listData")
         // 리스트 비었으면
-        if(listPref.size ==0){
+        if(listPref.size == 0){
             Log.d("TAG", "할일 없음 ")
-            // Toast.makeText(applicationContext, "끝 다함", Toast.LENGTH_SHORT).show()
             finish()
         }
         else{
@@ -89,7 +77,52 @@ class ToDoLockScreenActivity : AppCompatActivity() {
             val spaceDecoration = VerticalSpaceItemDecoration(30)
             recyclerView.addItemDecoration(spaceDecoration)
 
-            initView()
+            val ss : ArrayList<Int> = initView()
+            Log.d("시바", ss[0].toString())
+            Log.d("시바", ss[1].toString())
+            Log.d("시바", ss[2].toString())
+            a = ss[0]
+            Log.d("시바a", a.toString())
+            b = ss[1]
+        }
+    }
+
+    //시작, 끝점 계산해서 밀어서 잠금해제
+    fun swipeToFinish(){
+
+        var startX = 0
+        var startY = 0
+
+        var endX = 0
+        var endY = 0
+        lockScreenBackground.setOnTouchListener { v, event ->
+            when(event.action){
+                MotionEvent.ACTION_DOWN -> {
+                    // 초기값
+                    startX =  event.x.toInt()
+                    startY =  event.y.toInt()
+
+                    Log.d("start x", startX.toString() )
+                    Log.d("start y", startY.toString() )
+                }
+
+                MotionEvent.ACTION_MOVE -> {
+                    // 이동 값
+                    endX = event.x.toInt()
+                    endY = event.y.toInt()
+
+                    Log.d("end x", endX.toString() )
+                    Log.d("end y", endY.toString() )
+                }
+
+                // 이동 끝내고 조건 맞으면 헤제
+                else -> {
+                    Log.d("gazaa", (((endX-startX)*(endX-startX)) + ((endY-startY)*(endY-startY))).toString())
+                    if( ((endX- startX)*(endX - startX)) + ((endY - startY)*(endY- startY)) >= 80000 )
+                        finish()
+                }
+            }
+            true
         }
 
     }
@@ -101,14 +134,20 @@ class ToDoLockScreenActivity : AppCompatActivity() {
     }
 
 
-    fun initView(){
+    fun initView() : ArrayList<Int> {
         Log.d("TAG", "리사이클 뷰 초기화")
 
+        val selectedColorArray = ArrayList<Int>()
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // 배경색, 글자색
-        val backgroundColor = getInt("backgroundColor")
+        // 글자색, 리스트색, 배경색
         val textColor = getInt("textColor")
+        val listColor = getInt("listColor")
+        val backgroundColor = getInt("backgroundColor")
+
+        selectedColorArray.add(textColor)
+        selectedColorArray.add(listColor)
+        selectedColorArray.add(backgroundColor)
 
         when(backgroundColor){
             0 -> {
@@ -200,8 +239,6 @@ class ToDoLockScreenActivity : AppCompatActivity() {
 
         }
 
-//        var finn = false
-
         // ItemTouchHelper 구현 (SDK Version 22부터 사용 가능)
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
@@ -279,6 +316,8 @@ class ToDoLockScreenActivity : AppCompatActivity() {
             // ItemTouchHelper에 RecyclerView 설정
             attachToRecyclerView(recyclerView)
         }
+
+        return selectedColorArray
     }
 
     override fun onDestroy() {
@@ -302,7 +341,6 @@ class ToDoLockScreenActivity : AppCompatActivity() {
             // 첫번째면 위에도 여백
             if(parent.getChildAdapterPosition(view) == 0){
                 outRect.top = verticalSpaceHeight
-                //return
             }
 
             outRect.bottom = verticalSpaceHeight
@@ -317,6 +355,10 @@ class ToDoLockScreenActivity : AppCompatActivity() {
 
             return MyViewHolder(view)
         }
+
+     //   val holderTextColor = this
+//        val holderItemColor = ToDoLockScreenActivity().
+
 
         override fun getItemCount(): Int {
             return datas.size
@@ -335,16 +377,17 @@ class ToDoLockScreenActivity : AppCompatActivity() {
         fun deleteList(position: Int){
             datas.removeAt(position)
 
-            Log.d("T삭제샹", position.toString())
+            Log.d("삭제샹", position.toString())
             notifyDataSetChanged()
         }
-
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             Log.d("TAG" , "onBind")
             holder.textField.text = datas[position]
-          //  holder.textField.setTextColor(Color.parseColor("#f987c5"))
-         //   holder.textField.setTextColor(Color.RED)
+
+           Log.d("글자색 번호", holderTextColor.toString())
+//            Log.d("아이템 색 번호", holderTextColor[1].toString())
+
 
             // 각 아이템 모양
             holder.itemView.setBackgroundResource(R.drawable.item_view)//  R.color.colorWhite

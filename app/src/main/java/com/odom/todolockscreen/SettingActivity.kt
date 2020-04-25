@@ -41,6 +41,26 @@ class SettingActivity : AppCompatActivity() {
             // xml 폴더의 pref 파일
             addPreferencesFromResource(R.xml.pref)
 
+            // 글자색
+            val textColorCategoryPref = findPreference("textColorCategory") as ListPreference
+            textColorCategoryPref.setOnPreferenceChangeListener { preference, newValue ->
+                val index = textColorCategoryPref.findIndexOfValue(newValue.toString())
+                setInts(context, "textColor", index)
+                textColorCategoryPref.summary = textColorCategoryPref.entries[index]
+                Log.d("선택한 글자색", textColorCategoryPref.summary.toString())
+                true
+            }
+
+            // 각 리스트 색
+            val listColorCategoryPref = findPreference("listColorCategory") as ListPreference
+            listColorCategoryPref.setOnPreferenceChangeListener { preference, newValue ->
+                val index = listColorCategoryPref.findIndexOfValue(newValue.toString())
+                setInts(context, "listColor", index)
+                listColorCategoryPref.summary = listColorCategoryPref.entries[index]
+                Log.d("선택한 리스트색", listColorCategoryPref.summary.toString())
+                true
+            }
+
             // 배경색
             val backgroundColorCategoryPref = findPreference("backgroundColorCategory") as ListPreference
             backgroundColorCategoryPref.setOnPreferenceChangeListener { preference, newValue ->
