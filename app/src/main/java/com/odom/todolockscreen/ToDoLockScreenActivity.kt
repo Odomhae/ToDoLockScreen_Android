@@ -33,11 +33,9 @@ class ToDoLockScreenActivity : AppCompatActivity() {
     // 빈 데이터 리스트 생성.
     val lockScreenItems = ArrayList<String>()
 
+    // 앱 종료 여부 판단
     var finn = false
     var finBt = false
-
-    var a = 1
-    var b = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +62,7 @@ class ToDoLockScreenActivity : AppCompatActivity() {
         val listPref =  getStringArrayPref("listData")
         // 리스트 비었으면
         if(listPref.size == 0){
-            Log.d("TAG", "할일 없음 ")
+            Log.d("TAG", "할일 없음")
             finish()
         }
         else{
@@ -77,17 +75,19 @@ class ToDoLockScreenActivity : AppCompatActivity() {
             val spaceDecoration = VerticalSpaceItemDecoration(30)
             recyclerView.addItemDecoration(spaceDecoration)
 
-            val ss : ArrayList<Int> = initView()
-            Log.d("시바", ss[0].toString())
-            Log.d("시바", ss[1].toString())
-            Log.d("시바", ss[2].toString())
-            a = ss[0]
-            Log.d("시바a", a.toString())
-            b = ss[1]
+            initView()
+            val textColor = getInt("textColor")
+            val listColor = getInt("listColor")
+            Log.d("글자색 전달", textColor.toString())
+            Log.d("아이템색 전달 ", listColor.toString())
+
+            (recyclerView.adapter as MyAdapter).getInts(textColor, listColor)
         }
+
+
     }
 
-    //시작, 끝점 계산해서 밀어서 잠금해제
+    // 밀어서 잠금해제
     fun swipeToFinish(){
 
         var startX = 0
@@ -127,28 +127,19 @@ class ToDoLockScreenActivity : AppCompatActivity() {
 
     }
 
-    // 설정에 따라
+    // 설정값 가져오기
     fun getInt( key : String) : Int{
         val prefs = getSharedPreferences("SETTINGS", Context.MODE_PRIVATE)
         return prefs.getInt(key, 0)
     }
 
+    // 뷰 초기화
+    fun initView() {
 
-    fun initView() : ArrayList<Int> {
-        Log.d("TAG", "리사이클 뷰 초기화")
-
-        val selectedColorArray = ArrayList<Int>()
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // 글자색, 리스트색, 배경색
-        val textColor = getInt("textColor")
-        val listColor = getInt("listColor")
+        // 배경색
         val backgroundColor = getInt("backgroundColor")
-
-        selectedColorArray.add(textColor)
-        selectedColorArray.add(listColor)
-        selectedColorArray.add(backgroundColor)
-
         when(backgroundColor){
             0 -> {
                 lockScreenBackground.setBackgroundColor(resources.getColor(R.color.colorWhite))
@@ -264,13 +255,11 @@ class ToDoLockScreenActivity : AppCompatActivity() {
                 //AlertDialogBuilder
                 val mBuilder = AlertDialog.Builder(this@ToDoLockScreenActivity)
                     .setView(mDialogView)
-                   // .setTitle("삭제합니다")
 
                 val mAlertDialog = mBuilder.show()
 
                 val noBt = mDialogView.findViewById(R.id.noButton) as Button
                 noBt.setOnClickListener {
-
                     initView()
                     mAlertDialog.dismiss()
                 }
@@ -291,15 +280,15 @@ class ToDoLockScreenActivity : AppCompatActivity() {
                         //알림 & 화면 종료
                         val builder = AlertDialog.Builder(this@ToDoLockScreenActivity)
 
-                        builder.setTitle("앱 종료합니다")
+                        builder.setTitle(R.string.exit_app_message)
                             .setIcon(R.mipmap.ic_launcher)
-                            .setMessage("더 이상 할 일이 없습니다")
-                            .setPositiveButton("종료 ㄱㄱㄱ",
+                            .setMessage(R.string.nothing_left_message)
+                            .setPositiveButton(R.string.ok,
                                 DialogInterface.OnClickListener { dialog, id ->
                                     finBt = true
                                     finish()
                                 })
-                            .setNegativeButton("취소",
+                            .setNegativeButton(R.string.cancel,
                                 DialogInterface.OnClickListener { dialog, id ->
                                     finish()
                                 })
@@ -316,19 +305,17 @@ class ToDoLockScreenActivity : AppCompatActivity() {
             // ItemTouchHelper에 RecyclerView 설정
             attachToRecyclerView(recyclerView)
         }
-
-        return selectedColorArray
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
+        // 할일 없고 앱 종료 버튼 눌렸으면
         // 앱 종료
         if (finn && finBt){
-            Log.d("TAG","좀 ")
+            Log.d("TAG","앱 프로세스 종료")
             exitProcess(0)
         }
-
     }
 
     inner class VerticalSpaceItemDecoration(private val verticalSpaceHeight: Int) :
@@ -356,12 +343,18 @@ class ToDoLockScreenActivity : AppCompatActivity() {
             return MyViewHolder(view)
         }
 
-     //   val holderTextColor = this
-//        val holderItemColor = ToDoLockScreenActivity().
-
+        // 글자, 아이템 색
+        var holderTextColor = 1
+        var holderItemColor = 1
 
         override fun getItemCount(): Int {
             return datas.size
+        }
+
+        // 설정값 넣어주고
+        fun getInts(a :Int, b :Int){
+            holderTextColor = a
+            holderItemColor = b
         }
 
 
@@ -382,17 +375,58 @@ class ToDoLockScreenActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            Log.d("TAG" , "onBind")
             holder.textField.text = datas[position]
 
-           Log.d("글자색 번호", holderTextColor.toString())
-//            Log.d("아이템 색 번호", holderTextColor[1].toString())
+            // 글자색
+            when(holderTextColor){
+                0-> holder.textField.setTextColor(Color.parseColor("#ffffff"))
+                1-> holder.textField.setTextColor(Color.parseColor("#DCDCDC"))
+                2-> holder.textField.setTextColor(Color.parseColor("#000000"))
+                3-> holder.textField.setTextColor(Color.parseColor("#FF0023"))
+                4-> holder.textField.setTextColor(Color.parseColor("#b80f0a"))
+                5-> holder.textField.setTextColor(Color.parseColor("#FA8072"))
+                6-> holder.textField.setTextColor(Color.parseColor("#F2DFD2"))
+                7-> holder.textField.setTextColor(Color.parseColor("#f37021"))
+                8-> holder.textField.setTextColor(Color.parseColor("#7c4700"))
+                9-> holder.textField.setTextColor(Color.parseColor("#432711"))
+                10-> holder.textField.setTextColor(Color.parseColor("#2C40DC"))
+                11-> holder.textField.setTextColor(Color.parseColor("#ff89d3fb"))
+                12-> holder.textField.setTextColor(Color.parseColor("#1CAE4C"))
+                13-> holder.textField.setTextColor(Color.parseColor("#52D017"))
+                14-> holder.textField.setTextColor(Color.parseColor("#69e0a5"))
+                15-> holder.textField.setTextColor(Color.parseColor("#e8f321"))
+                16-> holder.textField.setTextColor(Color.parseColor("#f987c5"))
+                17-> holder.textField.setTextColor(Color.parseColor("#cc99ff"))
+                18-> holder.textField.setTextColor(Color.parseColor("#FF00FF"))
+                19-> holder.textField.setTextColor(Color.parseColor("#8b00ff"))
+            }
+
+            // 각 아이템 색
+            when(holderItemColor){ // (R.drawable.item_view)
+                0 -> holder.itemView.setBackgroundResource(R.color.colorWhite)
+                1 -> holder.itemView.setBackgroundResource(R.color.colorGray)
+                2 -> holder.itemView.setBackgroundResource(R.color.colorBlack)
+                3 -> holder.itemView.setBackgroundResource(R.color.colorRed)
+                4 -> holder.itemView.setBackgroundResource(R.color.colorCrimson)
+                5 -> holder.itemView.setBackgroundResource(R.color.colorSalmon)
+                6 -> holder.itemView.setBackgroundResource(R.color.colorBeige)
+                7 -> holder.itemView.setBackgroundResource(R.color.colorOrange)
+                8 -> holder.itemView.setBackgroundResource(R.color.colorBrown)
+                9 -> holder.itemView.setBackgroundResource(R.color.colorWalnut)
+                10 -> holder.itemView.setBackgroundResource(R.color.colorBlue)
+                11-> holder.itemView.setBackgroundResource(R.color.colorMalibu)
+                12 -> holder.itemView.setBackgroundResource(R.color.colorGreen)
+                13 -> holder.itemView.setBackgroundResource(R.color.colorYellowGreen)
+                14 -> holder.itemView.setBackgroundResource(R.color.colorMint)
+                15 -> holder.itemView.setBackgroundResource(R.color.colorYellow)
+                16 -> holder.itemView.setBackgroundResource(R.color.colorPink)
+                17 -> holder.itemView.setBackgroundResource(R.color.colorViolet)
+                18 -> holder.itemView.setBackgroundResource(R.color.colorMagenta)
+                19 -> holder.itemView.setBackgroundResource(R.color.colorPurple)
+            }
 
 
-            // 각 아이템 모양
-            holder.itemView.setBackgroundResource(R.drawable.item_view)//  R.color.colorWhite
             holder.itemView.isSelected = true
-
             
 //            holder.itemView.setOnTouchListener{ v, event ->
 //               if(event.action == MotionEvent.ACTION_DOWN )

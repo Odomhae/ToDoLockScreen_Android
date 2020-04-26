@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">TodoLockscreen</string>
+    <string name="app_name">Stuff to do</string>
 
     <string name="colorWhite">White</string>
-    <string name="colorGray">Gray</string>
     <string name="colorBlack">Black</string>
+    <string name="colorGray">Gray</string>
     <string name="colorRed">Red</string>
     <string name="colorCrimson">Crimson</string>
     <string name="colorSalmon">Salmon</string>
@@ -44,5 +44,30 @@
         <item>@string/colorMagenta</item>
         <item>@string/colorPurple</item>
     </string-array>
+
+    <!-- main.xml-->
+    <string name="stuff_to_do">Stuff to do</string>
+    <string name="enter_here">Please enter here.</string>
+
+    <!-- pref.xml  -->
+    <string name="app_activation">App Activation</string>
+    <string name="app_activated">App activated</string>
+    <string name="app_disabled">App disabled</string>
+    <string name="text_color">Text Color</string>
+    <string name="list_color">List Color</string>
+    <string name="background_color">Background Color</string>
+
+    <!-- ask_box.xml  -->
+    <string name="ask_delete_item">Delete from list?</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="app_settings">Settings</string>
+
+    <!-- mainActivity.kt -->
+    <string name="empty_input_message">Empty input</string>
+
+    <!--TodoLockScreenActivity.kt -->
+    <string name="exit_app_message">Exit App</string>
+    <string name="nothing_left_message">There is nothing left to do.</string>
 
 </resources>

@@ -143,7 +143,7 @@ class MainActivity : AppCompatActivity() {
     private fun addList(){
 
         if(editText.text.isEmpty()){
-            Toast.makeText(applicationContext, "비었음다", Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, R.string.empty_input_message, Toast.LENGTH_SHORT).show()
         }
         // 빈 입력 아니면 추가
         else{

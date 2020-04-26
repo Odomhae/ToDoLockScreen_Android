@@ -4,51 +4,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/askMessageText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/item_view"
-        android:layout_gravity="center_horizontal">
-
-        <ImageView
-            android:layout_marginLeft="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_launcher" />
-
-        <TextView
-            android:id="@+id/askMessageText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:padding="10dp"
-            android:layout_marginLeft="10dp"
-            android:paddingStart="60dp"
-            android:text="삭제합니다"
-            android:textSize="30sp" />
-
-    </LinearLayout>
+        android:padding="10dp"
+        android:textColor="@color/colorRed"
+        android:text="@string/ask_delete_item"
+        android:textSize="30sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center_horizontal">
-        <Button
+
+         <Button
             android:id="@+id/noButton"
+             android:textAllCaps="false"
             android:background="@drawable/item_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="no"
+            android:text="@string/cancel"
+             android:textSize="20sp"
             android:layout_weight="1"
             />
         <Button
             android:id="@+id/yesButton"
+            android:textAllCaps="false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/item_view"
-            android:text="yes"
+            android:text="@string/ok"
+            android:textSize="20sp"
             android:layout_weight="1"
             />
 

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">이것만 하자</string>
+
+
+    <string name="enter_here">여기에 입력하세요.</string>
+    <string name="exit_app_message">앱을 종료합니다.</string>
+    <string name="text_color">글자색</string>
+    <string name="app_settings">설정</string>
+    <string name="background_color">배경색</string>
+    <string name="cancel">취소</string>
+    <string name="colorBlack">검정</string>
+    <string name="ask_delete_item">리스트에서 지울까요?</string>
+    <string name="ok">예</string>
+    <string name="nothing_left_message">남은 일이 없습니다.</string>
+    <string name="stuff_to_do">할꺼</string>
+    <string name="colorBeige">베이지</string>
+    <string name="colorGray">회색</string>
+    <string name="colorMalibu">말리부</string>
+    <string name="colorOrange">오렌지</string>
+    <string name="colorPink">핑크</string>
+    <string name="colorViolet">바이올렛</string>
+    <string name="colorWhite">흰색</string>
+    <string name="colorYellow">노랑</string>
+    <string name="empty_input_message">빈 입력입니다.</string>
+    <string name="list_color">리스트 색</string>
+    <string name="colorBrown">갈색</string>
+    <string name="colorCrimson">크림슨</string>
+    <string name="colorGreen">초록</string>
+    <string name="colorMagenta">마젠타</string>
+    <string name="colorMint">민트</string>
+    <string name="colorBlue">파랑</string>
+    <string name="colorRed">빨강</string>
+    <string name="colorSalmon">살몬</string>
+    <string name="colorWalnut">진갈색</string>
+    <string name="colorYellowGreen">연두</string>
+    <string name="colorPurple">보라</string>
+    <string name="app_disabled">비활성화됨</string>
+    <string name="app_activated">활성화됨</string>
+    <string name="app_activation">앱 실행</string>
+</resources>
