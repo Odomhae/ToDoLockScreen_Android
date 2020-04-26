@@ -402,10 +402,10 @@ class ToDoLockScreenActivity : AppCompatActivity() {
             }
 
             // 각 아이템 색
-            when(holderItemColor){ // (R.drawable.item_view)
-                0 -> holder.itemView.setBackgroundResource(R.color.colorWhite)
+            when(holderItemColor){
+                0 -> holder.itemView.setBackgroundResource(R.color.colorBlack)
                 1 -> holder.itemView.setBackgroundResource(R.color.colorGray)
-                2 -> holder.itemView.setBackgroundResource(R.color.colorBlack)
+                2 -> holder.itemView.setBackgroundResource(R.color.colorWhite)
                 3 -> holder.itemView.setBackgroundResource(R.color.colorRed)
                 4 -> holder.itemView.setBackgroundResource(R.color.colorCrimson)
                 5 -> holder.itemView.setBackgroundResource(R.color.colorSalmon)
@@ -423,6 +423,8 @@ class ToDoLockScreenActivity : AppCompatActivity() {
                 17 -> holder.itemView.setBackgroundResource(R.color.colorViolet)
                 18 -> holder.itemView.setBackgroundResource(R.color.colorMagenta)
                 19 -> holder.itemView.setBackgroundResource(R.color.colorPurple)
+
+                else -> holder.itemView.setBackgroundResource(R.drawable.item_view)
             }
 
 

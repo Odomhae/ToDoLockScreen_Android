@@ -38,4 +38,6 @@
     <string name="app_disabled">비활성화됨</string>
     <string name="app_activated">활성화됨</string>
     <string name="app_activation">앱 실행</string>
+    <string name="setting_app">설정</string>
+    <string name="view_app">보기</string>
 </resources>

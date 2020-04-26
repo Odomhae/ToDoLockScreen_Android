@@ -5,10 +5,14 @@ import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import org.json.JSONArray
+import org.json.JSONException
 
 
 class LockScreenService :Service(){
@@ -61,8 +65,9 @@ class LockScreenService :Service(){
             // Notification 알림 객체 설정
             val builder = Notification.Builder(this, ANDROID_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle(getString(R.string.app_name))
-                .setContentText("앱 실행주우웅")
+                .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_background))
+                //.setContentTitle("$a 개 남음")
+              //  .setContentText("앱 실행주우웅")
 
             // 클릭시 메인 엑티비티로 이동하게
             val intent = Intent(this, MainActivity::class.java)
@@ -70,9 +75,12 @@ class LockScreenService :Service(){
             val intent2 = Intent(this, SettingActivity::class.java)
             val pendingIntent2 = PendingIntent.getActivity(this, 0, intent2, 0)
 
+            val asb : CharSequence = resources.getString(R.string.view_app)
+            val asb2 : CharSequence = resources.getString(R.string.setting_app)
+
             builder.setContentIntent(pendingIntent)
-            builder.addAction(android.R.drawable.ic_menu_view, "view", pendingIntent)
-            builder.addAction(android.R.drawable.ic_menu_view, "setting", pendingIntent2)
+            builder.addAction(android.R.drawable.ic_menu_view,asb, pendingIntent)
+            builder.addAction(android.R.drawable.ic_menu_view, asb2, pendingIntent2)
 
             val notification = builder.build()
 
@@ -95,4 +103,5 @@ class LockScreenService :Service(){
         return null
 
     }
+
 }
