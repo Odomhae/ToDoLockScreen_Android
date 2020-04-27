@@ -16,19 +16,28 @@ import org.json.JSONException
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import android.view.LayoutInflater
-
+import android.widget.Toast
+import android.view.KeyEvent.KEYCODE_ENTER
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.view.KeyEvent
 
 
 class MainActivity : AppCompatActivity() {
 
     // 빈 데이터 리스트 생성.
     val items = ArrayList<String>()
+
     //  하나의? 여려개 선택도 가능한게 나은데 // 이 가능한  adapter 설정
-    val adapter by lazy {  ArrayAdapter(this, android.R.layout.select_dialog_multichoice, items) } // simple_list_item_multiple_choice
+    val adapter by lazy {  ArrayAdapter(this, android.R.layout.select_dialog_item, items) } // simple_list_item_multiple_choice
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        window.statusBarColor = resources.getColor(R.color.colorGray)
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 
         // 설정
         settingButton.setOnClickListener {
@@ -38,13 +47,22 @@ class MainActivity : AppCompatActivity() {
 
         // ArrayAdapter 생성. 아이템 View를 선택(single choice)가능하도록 만듦.
         listView.adapter = adapter
-        listView.choiceMode = ListView.CHOICE_MODE_MULTIPLE
+        listView.choiceMode = ListView.CHOICE_MODE_NONE
 
         listView.setOnItemClickListener { parent, view, position, id ->
             Log.d("TAG", "클릭")
 
             showBox(items, position)
             setStringArrayPref("listData", items)
+        }
+
+        // 엔터눌러 입력
+        editText.setOnKeyListener { v, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KEYCODE_ENTER) {
+                addList()
+            }
+
+            true
         }
 
         //할일 추가
@@ -55,25 +73,6 @@ class MainActivity : AppCompatActivity() {
             addList()
         }
 
-        // 선택 삭제
-        deleteListButton.setOnClickListener {
-            //선택된 아이템들
-            val checkedItems = listView.checkedItemPositions
-
-            for (i in adapter.count - 1 downTo 0) {
-                if (checkedItems.get(i)) {
-                    Log.d("선택된 아이템 삭제", i.toString())
-                    items.removeAt(i)
-                }
-            }
-            adapter.notifyDataSetChanged()
-
-            // 선택 초기화
-            listView.clearChoices()
-            // 배열로 저장
-            setStringArrayPref("listData", items)
-
-        }
 
         // 이전 목록있으면 새로고침 전에도 넣어주시고
         val listPref =  getStringArrayPref("listData")
@@ -114,14 +113,10 @@ class MainActivity : AppCompatActivity() {
         //AlertDialogBuilder
         val mBuilder = AlertDialog.Builder(this)
             .setView(mDialogView)
-            .setTitle("수정하기")
 
-        var txtMessage = mDialogView.findViewById(R.id.txtmessage) as TextView
-        txtMessage.text = "Update item"
-        txtMessage.setTextColor(Color.parseColor("#ff2222"))
+        val bt1 = mDialogView.findViewById(R.id.btdone) as Button
 
-        val bt = mDialogView.findViewById(R.id.btdone) as Button
-        bt.setBackgroundColor(resources.getColor(android.R.color.holo_blue_light))
+        val bt2 = mDialogView.findViewById(R.id.btdelete) as Button
 
         val editText = mDialogView.findViewById(R.id.txtinput) as EditText
         editText.setText(list[position])
@@ -129,12 +124,37 @@ class MainActivity : AppCompatActivity() {
         //show dialog
         val mAlertDialog = mBuilder.show()
         //login button click of custom layout
-        bt.setOnClickListener {
+        bt1.setOnClickListener {
             list[position] = editText.text.toString()
             setStringArrayPref("listData", list)
             adapter.notifyDataSetChanged()
             //dismiss dialog
             mAlertDialog.dismiss()
+        }
+
+        // 삭제
+        bt2.setOnClickListener {
+            Log.d("TAG", "삭제버튼")
+
+            //알림 & 화면 종료
+            val builder = AlertDialog.Builder(this@MainActivity)
+
+            builder.setTitle(R.string.ask_delete_item)
+                //.setIcon(R.mipmap.ic_launcher)
+                .setPositiveButton(R.string.ok,
+                    DialogInterface.OnClickListener { dialog, id ->
+                        list.removeAt(position)
+                        setStringArrayPref("listData", list)
+                        adapter.notifyDataSetChanged()
+                        mAlertDialog.dismiss()
+                    })
+                .setNegativeButton(R.string.cancel,
+                    DialogInterface.OnClickListener { dialog, id ->
+                        mAlertDialog.dismiss()
+                    })
+
+            val alertDialog = builder.create()
+            alertDialog.show()
         }
     }
 

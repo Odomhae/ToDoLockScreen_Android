@@ -9,6 +9,7 @@ import android.preference.ListPreference
 import android.preference.PreferenceFragment
 import android.preference.SwitchPreference
 import android.util.Log
+import android.view.View
 import kotlinx.android.synthetic.main.activity_setting.*
 
 class SettingActivity : AppCompatActivity() {
@@ -18,6 +19,9 @@ class SettingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
+
+        window.statusBarColor = resources.getColor(R.color.colorGray)
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 
         fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit()
 

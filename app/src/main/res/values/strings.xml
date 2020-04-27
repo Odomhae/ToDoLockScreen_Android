@@ -81,14 +81,19 @@
     <string name="list_color">List Color</string>
     <string name="background_color">Background Color</string>
 
+    <!-- input_box,xml -->
+    <string name="save_button">Save</string>
+    <string name="delete_button">Delete</string>
+
     <!-- ask_box.xml  -->
-    <string name="ask_delete_item">Delete from list?</string>
+    <string name="ask_delete_item">Delete item?</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
     <string name="app_settings">Settings</string>
 
     <!-- mainActivity.kt -->
     <string name="empty_input_message">Empty input</string>
+
 
     <!--TodoLockScreenActivity.kt -->
     <string name="exit_app_message">Exit App</string>

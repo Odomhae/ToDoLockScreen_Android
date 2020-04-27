@@ -22,7 +22,7 @@
          <Button
             android:id="@+id/noButton"
              android:textAllCaps="false"
-            android:background="@drawable/item_view"
+            android:background="@drawable/border_set"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cancel"
@@ -34,8 +34,8 @@
             android:textAllCaps="false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/item_view"
-            android:text="@string/ok"
+            android:background="@drawable/border_set"
+            android:text="@string/delete_button"
             android:textSize="20sp"
             android:layout_weight="1"
             />

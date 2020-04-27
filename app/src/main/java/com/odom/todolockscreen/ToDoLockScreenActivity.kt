@@ -151,6 +151,7 @@ class ToDoLockScreenActivity : AppCompatActivity() {
             1 -> {
                 lockScreenBackground.setBackgroundColor(resources.getColor(R.color.colorGray))
                 window.statusBarColor = resources.getColor(R.color.colorGray)
+                window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
             }
             2 ->  {
                 lockScreenBackground.setBackgroundColor(resources.getColor(R.color.colorBlack))
