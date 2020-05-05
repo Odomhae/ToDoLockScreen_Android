@@ -50,7 +50,6 @@ class MainActivity : AppCompatActivity() {
 
     )
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -58,7 +57,20 @@ class MainActivity : AppCompatActivity() {
         window.statusBarColor = resources.getColor(R.color.colorGray)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 
-        //checkPermission3()
+        if (!Settings.canDrawOverlays(this)) {
+            // You don't have permission
+            Log.d("rnjsgks", "권한 ㄴㄴ")
+            checkPermission4()
+        }
+
+        // 다른 거 위에 뜨는게 허용 안되있으면
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            val myIntent =  Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+//            myIntent.data = Uri.parse("package:$packageName")
+//            startActivity(myIntent)
+//            // 뜨고 허용했을때 앱 실행되고
+//        }
+        // 허용되있으면 그냥 바로 메인뜨고..
 
 
         // 설정
@@ -122,33 +134,32 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    //퍼미션 체크 및 권한 요청 함수
-    private fun checkPermissions() {
-        //거절되었거나 아직 수락하지 않은 권한(퍼미션)을 저장할 문자열 배열 리스트
-//        var rejectedPermissionList = ArrayList<String>()
-////
-////        //필요한 퍼미션들을 하나씩 끄집어내서 현재 권한을 받았는지 체크
-////        for(permission in requiredPermissions){
-////            if(ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-////                //만약 권한이 없다면 rejectedPermissionList에 추가
-////                rejectedPermissionList.add(permission)
-////            }
-////        }
-////        Log.d("거절 권한갯수",rejectedPermissionList.size.toString())
-////        //거절된 퍼미션이 있다면...
-////        if(rejectedPermissionList.isNotEmpty()){
-////            //권한 요청!
-////            val array = arrayOfNulls<String>(rejectedPermissionList.size)
-////            ActivityCompat.requestPermissions(this, rejectedPermissionList.toArray(array), multiplePermissionsCode)
-////        }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
-        if (ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.SYSTEM_ALERT_WINDOW)
-            != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.SYSTEM_ALERT_WINDOW),
-                100)
+        if (requestCode == 123) {
+            if (!Settings.canDrawOverlays(this)) {
+                // You don't have permission
+                checkPermission4()
+            } else {
+                // Do as per your logic
+                Log.d("아씨바", "권한없으")
+            }
 
         }
     }
+
+
+    fun checkPermission4() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.canDrawOverlays(this)) {
+                val intent =  Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:$packageName"))
+                startActivityForResult(intent, 123)
+            }
+        }
+    }
+
 
     fun checkPermission3(){
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -162,7 +173,7 @@ class MainActivity : AppCompatActivity() {
                         .setMessage("저장소 권한이 거부되었습니다. 사용을 원하시면 설정에서 해당 권한을 직접 허용하셔야 합니다.")
                         .setNeutralButton("설정"
                         ) { dialogInterface, i ->
-                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                        val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
                         intent.data = Uri.parse("package:" + packageName)
                         startActivity(intent)
                         }
@@ -173,54 +184,6 @@ class MainActivity : AppCompatActivity() {
                         .show()
             } else {
                 ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE), 101)
-            }
-        }
-    }
-
-    fun checkPermission() {
-        // 나열해둔 permission check loop
-        for (permission in requiredPermissions) {
-            val permissionCheck = ContextCompat.checkSelfPermission(this, permission)
-            // 권한 요청 승인시 return 0, 거부시 return -1
-            Log.d("PermissionUtil", "PERMISSION :: $permission / $permissionCheck")
-            // permission check 후 denied 상태인 permission만 다시 승인 요청
-            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                // denied 된 permission 승인 요청 loop
-                for (code in permissionCodes) {
-                    // request permission
-                    ActivityCompat.requestPermissions(this, requiredPermissions, code)
-                }
-                Log.d("PermissionUtil", "$permission :: permission denied")
-            } else {
-                Log.d("PermissionUtil", "$permission :: permission granted")
-            }
-        }
-    }
-
-    fun checkPermission2() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SYSTEM_ALERT_WINDOW) != PackageManager.PERMISSION_GRANTED)
-        {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.SYSTEM_ALERT_WINDOW))
-            {
-                AlertDialog.Builder(this)
-                    .setTitle("알림")
-                    .setMessage("저장소 권한이 거부되었습니다. 사용을 원하시면 설정에서 해당 권한을 직접 허용하셔야 합니다.")
-                    .setNeutralButton("설정"
-                    ) { dialogInterface, i ->
-                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                        intent.data = Uri.parse("package:" + packageName)
-                        startActivity(intent)
-                    }
-                    .setPositiveButton("확인"
-                    ) { dialogInterface, i -> finish() }
-                    .setCancelable(false)
-                    .create()
-                    .show()
-            }
-            else
-            {
-                ActivityCompat.requestPermissions(this, arrayOf<String>(Manifest.permission.SYSTEM_ALERT_WINDOW), 101)
             }
         }
     }
@@ -243,8 +206,8 @@ class MainActivity : AppCompatActivity() {
                     .setMessage("저장소 권한이 22거부되었습니다. 사용을 원하시면 설정에서 해당 권한을 직접 허용하셔야 합니다.")
                     .setNeutralButton("설정"
                     ) { dialogInterface, i ->
-                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                        intent.data = Uri.parse("package:" + packageName)
+                        val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+                        intent.data = Uri.parse("package:$packageName")
                         startActivity(intent)
                     }
                     .setPositiveButton("확인"
