@@ -2,6 +2,12 @@
 <resources>
     <string name="app_name">이것만 하자</string>
 
+    <!-- admob-->
+    <string name="TEST_banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="TEST_fullscreen_video_ad_unit_id">ca-app-pub-3940256099942544/8691691433</string>
+    <string name="TEST_fullscreen_ad_unit_id">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="TEST_admob_app_id"> ca-app-pub-3940256099942544~3347511713</string>
+
 
     <string name="enter_here">여기에 입력하세요.</string>
     <string name="exit_app_message">앱을 종료합니다.</string>

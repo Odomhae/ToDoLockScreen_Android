@@ -68,6 +68,12 @@
         <item>@string/colorPurple</item>
     </string-array>
 
+    <!-- admob-->
+    <string name="TEST_banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="TEST_fullscreen_video_ad_unit_id">ca-app-pub-3940256099942544/8691691433</string>
+    <string name="TEST_fullscreen_ad_unit_id">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="TEST_admob_app_id"> ca-app-pub-3940256099942544~3347511713</string>
+
 
     <!-- main.xml-->
     <string name="stuff_to_do">Stuff to do</string>

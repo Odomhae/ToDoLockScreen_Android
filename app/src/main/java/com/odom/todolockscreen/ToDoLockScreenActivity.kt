@@ -22,7 +22,6 @@ import android.graphics.Rect
 import android.view.*
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
-import kotlinx.android.synthetic.main.ask_box.*
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.system.exitProcess

@@ -8,13 +8,31 @@ import android.os.Bundle
 import android.preference.ListPreference
 import android.preference.PreferenceFragment
 import android.preference.SwitchPreference
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import kotlinx.android.synthetic.main.activity_setting.*
 
 class SettingActivity : AppCompatActivity() {
 
     val fragment = MyPreferenceFragment()
+    // 광고
+    lateinit var mAdView : AdView
+    private val adSize: AdSize
+        get() {
+            val display = windowManager.defaultDisplay
+            val outMetrics = DisplayMetrics()
+            display.getMetrics(outMetrics)
+
+            val density = outMetrics.density
+            val adWidthPixels = outMetrics.widthPixels.toFloat()
+            val adWidth = (adWidthPixels / density).toInt()
+            return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, adWidth)
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,9 +43,27 @@ class SettingActivity : AppCompatActivity() {
 
         fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit()
 
+        // 배너 광고
+        MobileAds.initialize(this) {}
+        mAdView = AdView(this)
+        adView.addView(mAdView)
+        loadBanner()
+
         closeImage.setOnClickListener {
             finish()
         }
+    }
+
+    private fun loadBanner() {
+        mAdView.adUnitId = resources.getString(R.string.TEST_banner_ad_unit_id)
+        mAdView.adSize = adSize
+
+        val adRequest = AdRequest
+            .Builder()
+            .addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build()
+
+        // Start loading the ad in the background.
+        mAdView.loadAd(adRequest)
     }
 
     class MyPreferenceFragment : PreferenceFragment(){

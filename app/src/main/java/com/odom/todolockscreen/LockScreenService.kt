@@ -10,9 +10,6 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Build
 import android.os.IBinder
-import androidx.core.app.NotificationCompat
-import org.json.JSONArray
-import org.json.JSONException
 
 
 class LockScreenService :Service(){
@@ -66,8 +63,6 @@ class LockScreenService :Service(){
             val builder = Notification.Builder(this, ANDROID_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_background))
-                //.setContentTitle("$a 개 남음")
-              //  .setContentText("앱 실행주우웅")
 
             // 클릭시 메인 엑티비티로 이동하게
             val intent = Intent(this, MainActivity::class.java)
@@ -90,6 +85,7 @@ class LockScreenService :Service(){
 
         return START_REDELIVER_INTENT
     }
+
 
     override fun onDestroy() {
         super.onDestroy()
