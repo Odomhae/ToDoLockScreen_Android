@@ -92,13 +92,15 @@
     <string name="delete_button">Delete</string>
 
     <!-- ask_box.xml  -->
-    <string name="ask_delete_item">Delete item?</string>
+    <string name="ask_delete_item">Delete item</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
     <string name="app_settings">Settings</string>
 
     <!-- mainActivity.kt -->
     <string name="empty_input_message">Empty input</string>
+    <string name="permission_denied_message">Permission denied</string>
+    <string name="permission_set_message">Permission set</string>
 
 
     <!--TodoLockScreenActivity.kt -->
