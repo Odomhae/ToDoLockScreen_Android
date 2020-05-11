@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity(){
     // 빈 데이터 리스트 생성.
     val items = ArrayList<String>()
     //퍼미션 응답 처리 코드
-    private val multiplePermissionsCode = 100
+    private val PermissionsCode = 100
     //  하나의? 여려개 선택도 가능한게 나은데 // 이 가능한  adapter 설정
     val adapter by lazy {  ArrayAdapter(this, android.R.layout.select_dialog_item, items) }
 
@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity(){
             if (!Settings.canDrawOverlays(this)) {
                 val intent =  Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                     Uri.parse("package:$packageName"))
-                startActivityForResult(intent, multiplePermissionsCode)
+                startActivityForResult(intent, PermissionsCode)
             }
         }
     }
@@ -113,15 +113,19 @@ class MainActivity : AppCompatActivity(){
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == multiplePermissionsCode) {
+        if (requestCode == PermissionsCode) {
             if (Settings.canDrawOverlays(this)) {
-                Log.d("TAG", "권한부여 완료")
-                Toast.makeText(applicationContext, R.string.permission_set_message, Toast.LENGTH_LONG).show()
+                Log.d("TAG", "권한 설정됨")
+                val toast = Toast.makeText(applicationContext, R.string.permission_set_message, Toast.LENGTH_LONG)
+                    toast.setGravity(Gravity.TOP,  Gravity.CENTER, 550)
+                    toast.show()
                 onResume()
             }else{
-                Log.d("TAG", "권한부여 거절")
+                Log.d("TAG", "권한 거절됨")
                 finish()
-                Toast.makeText(applicationContext, R.string.permission_denied_message, Toast.LENGTH_LONG).show()
+                val toast = Toast.makeText(applicationContext, R.string.permission_denied_message, Toast.LENGTH_LONG)
+                toast.setGravity(Gravity.TOP, Gravity.CENTER, 550)
+                toast.show()
             }
         }
     }
