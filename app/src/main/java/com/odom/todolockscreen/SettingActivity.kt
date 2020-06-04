@@ -11,6 +11,9 @@ import android.preference.SwitchPreference
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
@@ -42,6 +45,32 @@ class SettingActivity : AppCompatActivity() {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 
         fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit()
+
+        //애드핏 광고
+        val adFitView = adFitView!!
+        adFitView.setClientId("DAN-1jxzd2jz2z5md")
+
+        // activity 또는 fragment의 lifecycle에 따라 호출
+        lifecycle.addObserver(object : LifecycleObserver {
+
+            @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+            fun onResume() {
+                adFitView.resume()
+            }
+
+            @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+            fun onPause() {
+                adFitView.pause()
+            }
+
+            @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+            fun onDestroy() {
+                adFitView.destroy()
+            }
+
+        })
+
+        adFitView.loadAd()  // 광고 요청
 
         // 배너 광고
         MobileAds.initialize(this) {}

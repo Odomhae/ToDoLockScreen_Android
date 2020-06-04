@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Stuff to do</string>
+    <string name="app_name">"Stuffing list"</string>
 
     <string name="colorWhite">White</string>
     <string name="colorBlack">Black</string>

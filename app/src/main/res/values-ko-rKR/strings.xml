@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">이것만 하자</string>
 
     <!-- admob-->
     <string name="TEST_banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
@@ -50,4 +49,5 @@
     <string name="delete_button">삭제</string>
     <string name="permission_denied_message">권한 거부됨</string>
     <string name="permission_set_message">권한 설정됨</string>
+    <string name="app_name">할꺼</string>
 </resources>
