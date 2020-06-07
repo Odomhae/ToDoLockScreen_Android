@@ -99,6 +99,21 @@ class MainActivity : AppCompatActivity(){
 
     }
 
+    // 뒤로가기로 앱 종료
+//    override fun onBackPressed() {
+//        Log.d("TAG", "눌리노")
+//        super.onBackPressed()
+//
+//       //finish()
+//    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Log.d("TAG", "눌리노22")
+            onBackPressed()
+        }
+        return super.onKeyDown(keyCode, event)
+    }
 
     fun checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

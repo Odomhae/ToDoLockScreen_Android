@@ -43,7 +43,6 @@
             android:layout_width="300dp"
             android:layout_height="58dp"
             android:layout_weight="6"
-            android:ems="10"
             android:textSize="25sp"
             android:hint="@string/enter_here"
             app:layout_constraintHorizontal_bias="0.500"
