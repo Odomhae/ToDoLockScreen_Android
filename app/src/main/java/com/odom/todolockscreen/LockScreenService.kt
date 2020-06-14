@@ -61,8 +61,7 @@ class LockScreenService :Service(){
 
             // Notification 알림 객체 설정
             val builder = Notification.Builder(this, ANDROID_CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_background))
+                .setSmallIcon(R.mipmap.ic_launcher_foreground)
 
             // 클릭시 메인 엑티비티로 이동하게
             val intent = Intent(this, MainActivity::class.java)

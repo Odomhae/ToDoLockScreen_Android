@@ -12,12 +12,18 @@ import android.widget.*
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONArray
 import org.json.JSONException
-import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import android.widget.Toast
 import android.view.KeyEvent.KEYCODE_ENTER
 import android.net.Uri
 import android.provider.Settings
+import android.view.inputmethod.EditorInfo
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+
+
+
 
 
 class MainActivity : AppCompatActivity(){
@@ -60,13 +66,13 @@ class MainActivity : AppCompatActivity(){
         }
 
         // 엔터눌러 입력
-        editText.setOnKeyListener { v, keyCode, event ->
-            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KEYCODE_ENTER) {
-                addList()
-            }
+//        editText.setOnKeyListener { _, keyCode, event ->
+//            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KEYCODE_ENTER) {
+//                addList()
+//            }
+//            true
+//        }
 
-            true
-        }
 
         //할일 추가
         addListButton.setOnClickListener {
@@ -99,21 +105,6 @@ class MainActivity : AppCompatActivity(){
 
     }
 
-    // 뒤로가기로 앱 종료
-//    override fun onBackPressed() {
-//        Log.d("TAG", "눌리노")
-//        super.onBackPressed()
-//
-//       //finish()
-//    }
-
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            Log.d("TAG", "눌리노22")
-            onBackPressed()
-        }
-        return super.onKeyDown(keyCode, event)
-    }
 
     fun checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -157,14 +148,14 @@ class MainActivity : AppCompatActivity(){
 
         val bt1 = mDialogView.findViewById(R.id.btdone) as Button
         val bt2 = mDialogView.findViewById(R.id.btdelete) as Button
-        val editText = mDialogView.findViewById(R.id.txtinput) as EditText
-        editText.setText(list[position])
+        val inputEditText = mDialogView.findViewById(R.id.txtinput) as EditText
+        inputEditText.setText(list[position])
 
         //show dialog
         val mAlertDialog = mBuilder.show()
         //login button click of custom layout
         bt1.setOnClickListener {
-            list[position] = editText.text.toString()
+            list[position] = inputEditText.text.toString()
             setStringArrayPref("listData", list)
             adapter.notifyDataSetChanged()
             //dismiss dialog
