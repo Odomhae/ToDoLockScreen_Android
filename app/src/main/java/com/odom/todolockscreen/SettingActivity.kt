@@ -73,27 +73,27 @@ class SettingActivity : AppCompatActivity() {
         adFitView.loadAd()  // 광고 요청
 
         // 배너 광고
-        MobileAds.initialize(this) {}
-        mAdView = AdView(this)
-        adView.addView(mAdView)
-        loadBanner()
+        //MobileAds.initialize(this) {}
+        //mAdView = AdView(this)
+        //adView.addView(mAdView)
+        //loadBanner()
 
         closeImage.setOnClickListener {
             finish()
         }
     }
 
-    private fun loadBanner() {
-        mAdView.adUnitId = resources.getString(R.string.TEST_banner_ad_unit_id)
-        mAdView.adSize = adSize
-
-        val adRequest = AdRequest
-            .Builder()
-            .addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build()
-
-        // Start loading the ad in the background.
-        mAdView.loadAd(adRequest)
-    }
+//    private fun loadBanner() {
+//        mAdView.adUnitId = resources.getString(R.string.TEST_banner_ad_unit_id)
+//        mAdView.adSize = adSize
+//
+//        val adRequest = AdRequest
+//            .Builder()
+//            .addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build()
+//
+//        // Start loading the ad in the background.
+//        mAdView.loadAd(adRequest)
+//    }
 
     class MyPreferenceFragment : PreferenceFragment(){
 
