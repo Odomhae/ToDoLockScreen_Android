@@ -1,7 +1,6 @@
 package com.odom.todolockscreen
 
-import android.app.Activity
-import android.app.ActivityManager
+
 import android.app.KeyguardManager
 import android.content.Context
 import android.os.Build
@@ -12,7 +11,6 @@ import kotlinx.android.synthetic.main.activity_to_do_locksceen.*
 import org.json.JSONArray
 import org.json.JSONException
 import androidx.recyclerview.widget.ItemTouchHelper
-
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_to_do_locksceen.view.*
@@ -87,7 +85,7 @@ class ToDoLockScreenActivity : AppCompatActivity() {
     }
 
     // 밀어서 잠금해제
-    fun swipeToFinish(){
+    private fun swipeToFinish(){
 
         var startX = 0
         var startY = 0
@@ -100,23 +98,16 @@ class ToDoLockScreenActivity : AppCompatActivity() {
                     // 초기값
                     startX =  event.x.toInt()
                     startY =  event.y.toInt()
-
-                    Log.d("start x", startX.toString() )
-                    Log.d("start y", startY.toString() )
                 }
 
                 MotionEvent.ACTION_MOVE -> {
                     // 이동 값
                     endX = event.x.toInt()
                     endY = event.y.toInt()
-
-                    Log.d("end x", endX.toString() )
-                    Log.d("end y", endY.toString() )
                 }
 
                 // 이동 끝내고 조건 맞으면 헤제
                 else -> {
-                    Log.d("gazaa", (((endX-startX)*(endX-startX)) + ((endY-startY)*(endY-startY))).toString())
                     if( ((endX- startX)*(endX - startX)) + ((endY - startY)*(endY- startY)) >= 80000 )
                         finish()
                 }
@@ -227,7 +218,6 @@ class ToDoLockScreenActivity : AppCompatActivity() {
                 lockScreenBackground.setBackgroundColor(resources.getColor(R.color.colorPurple))
                 window.statusBarColor = resources.getColor(R.color.colorPurple)
             }
-
         }
 
         // ItemTouchHelper 구현 (SDK Version 22부터 사용 가능)
@@ -427,17 +417,7 @@ class ToDoLockScreenActivity : AppCompatActivity() {
                 else -> holder.itemView.setBackgroundResource(R.drawable.item_view)
             }
 
-
             holder.itemView.isSelected = true
-            
-//            holder.itemView.setOnTouchListener{ v, event ->
-//               if(event.action == MotionEvent.ACTION_DOWN )
-//                   mStartDragListener.requestDrag(holder)
-//                else if(event.action == MotionEvent.ACTION_UP)
-//                   mStartDragListener.requestDrag(holder)
-//
-//            }
-
 
             // 폭 설정
             val layoutParams = holder.itemView.layoutParams
