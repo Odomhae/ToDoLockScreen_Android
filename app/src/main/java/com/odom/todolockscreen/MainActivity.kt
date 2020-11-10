@@ -65,15 +65,6 @@ class MainActivity : AppCompatActivity(){
             setStringArrayPref("listData", items)
         }
 
-        // 엔터눌러 입력
-//        editText.setOnKeyListener { _, keyCode, event ->
-//            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KEYCODE_ENTER) {
-//                addList()
-//            }
-//            true
-//        }
-
-
         //할일 추가
         addListButton.setOnClickListener {
             val count = adapter.count
