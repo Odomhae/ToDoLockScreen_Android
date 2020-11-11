@@ -182,7 +182,6 @@ class MainActivity : AppCompatActivity(){
 
     // 할일 추가버튼 함수
     private fun addList(){
-
         if(editText.text.isEmpty()){
             Toast.makeText(applicationContext, R.string.empty_input_message, Toast.LENGTH_SHORT).show()
         }

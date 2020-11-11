@@ -123,6 +123,24 @@ class ToDoLockScreenActivity : AppCompatActivity() {
         return prefs.getInt(key, 0)
     }
 
+    ////////////////////////
+    interface ItemDragListener{
+        fun onStartDrag(viewHolder: RecyclerView.ViewHolder)
+    }
+
+    class ViewHolder(itemView: View, listener: ItemDragListener) : RecyclerView.ViewHolder(itemView) {
+        init {
+            itemView.setOnTouchListener{v, event ->
+                if(event.action == MotionEvent.ACTION_DOWN)
+                    listener.onStartDrag(this)
+
+                false
+            }
+        }
+        // ...
+    }
+    ////////////////////////////////////
+
     // 뷰 초기화
     fun initView() {
 
@@ -226,6 +244,7 @@ class ToDoLockScreenActivity : AppCompatActivity() {
             // 위치 swap
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
                 Log.d("TAG", "위치 바꿉시다")
+                recyclerView.adapter?.notifyItemMoved(viewHolder.adapterPosition, target.adapterPosition) //
                 MyAdapter(lockScreenItems).swap(viewHolder.adapterPosition, target.adapterPosition)
                 return true
             }
