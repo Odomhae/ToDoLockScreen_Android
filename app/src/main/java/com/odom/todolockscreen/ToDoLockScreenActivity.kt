@@ -126,6 +126,7 @@ class ToDoLockScreenActivity : AppCompatActivity() {
     ////////////////////////
     interface ItemDragListener{
         fun onStartDrag(viewHolder: RecyclerView.ViewHolder)
+        fun onItemMove(from_position:Int, to_position:Int)
     }
 
     class ViewHolder(itemView: View, listener: ItemDragListener) : RecyclerView.ViewHolder(itemView) {
@@ -241,19 +242,19 @@ class ToDoLockScreenActivity : AppCompatActivity() {
         // ItemTouchHelper 구현 (SDK Version 22부터 사용 가능)
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
+            override fun isLongPressDragEnabled(): Boolean {
+                Log.d("TAG", "오래누름")
+                return true
+            }
+            override fun isItemViewSwipeEnabled(): Boolean {
+                return true
+            }
+
             // 위치 swap
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
                 Log.d("TAG", "위치 바꿉시다")
                 recyclerView.adapter?.notifyItemMoved(viewHolder.adapterPosition, target.adapterPosition) //
                 MyAdapter(lockScreenItems).swap(viewHolder.adapterPosition, target.adapterPosition)
-                return true
-            }
-
-            override fun isLongPressDragEnabled(): Boolean {
-                Log.d("TAG", "오래누름")
-                return false
-            }
-            override fun isItemViewSwipeEnabled(): Boolean {
                 return true
             }
 
@@ -343,7 +344,7 @@ class ToDoLockScreenActivity : AppCompatActivity() {
         }
     }
 
-    class MyAdapter(private var datas: ArrayList<String>) : RecyclerView.Adapter<MyViewHolder>() {
+    class MyAdapter(private var datas: ArrayList<String>) : RecyclerView.Adapter<MyViewHolder>(), ItemDragListener{
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.activity_to_do_locksceen, parent, false)
@@ -442,6 +443,15 @@ class ToDoLockScreenActivity : AppCompatActivity() {
             val layoutParams = holder.itemView.layoutParams
             layoutParams.height = 120
             holder.itemView.requestLayout()
+        }
+
+        override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
+            TODO("Not yet implemented")
+        }
+
+        override fun onItemMove(from_position: Int, to_position: Int) {
+            TODO("Not yet implemented")
+
         }
     }
 
