@@ -450,8 +450,11 @@ class ToDoLockScreenActivity : AppCompatActivity() {
         }
 
         override fun onItemMove(from_position: Int, to_position: Int) {
-            TODO("Not yet implemented")
 
+            val s = datas.get(from_position)
+            datas.remove(datas[from_position])
+            datas.add(to_position, s)
+            notifyItemMoved(from_position, to_position)
         }
     }
 
