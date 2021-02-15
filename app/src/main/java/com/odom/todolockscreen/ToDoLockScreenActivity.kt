@@ -3,27 +3,26 @@ package com.odom.todolockscreen
 
 import android.app.KeyguardManager
 import android.content.Context
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.activity_to_do_locksceen.*
-import org.json.JSONArray
-import org.json.JSONException
-import androidx.recyclerview.widget.ItemTouchHelper
-import android.util.Log
-import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.activity_to_do_locksceen.view.*
 import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.Rect
+import android.os.Build
+import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.activity_to_do_locksceen.*
+import kotlinx.android.synthetic.main.activity_to_do_locksceen.view.*
+import org.json.JSONArray
+import org.json.JSONException
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.system.exitProcess
-
 
 class ToDoLockScreenActivity : AppCompatActivity() {
 
@@ -79,8 +78,8 @@ class ToDoLockScreenActivity : AppCompatActivity() {
             Log.d("아이템색 전달 ", listColor.toString())
 
             (recyclerView.adapter as MyAdapter).getInts(textColor, listColor)
-        }
 
+        }
 
     }
 
@@ -128,19 +127,6 @@ class ToDoLockScreenActivity : AppCompatActivity() {
         fun onStartDrag(viewHolder: RecyclerView.ViewHolder)
         fun onItemMove(from_position:Int, to_position:Int)
     }
-
-    class ViewHolder(itemView: View, listener: ItemDragListener) : RecyclerView.ViewHolder(itemView) {
-        init {
-            itemView.setOnTouchListener{v, event ->
-                if(event.action == MotionEvent.ACTION_DOWN)
-                    listener.onStartDrag(this)
-
-                false
-            }
-        }
-        // ...
-    }
-    ////////////////////////////////////
 
     // 뷰 초기화
     fun initView() {
@@ -240,20 +226,27 @@ class ToDoLockScreenActivity : AppCompatActivity() {
         }
 
         // ItemTouchHelper 구현 (SDK Version 22부터 사용 가능)
-        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
-            override fun isLongPressDragEnabled(): Boolean {
-                Log.d("TAG", "오래누름")
-                return true
-            }
             override fun isItemViewSwipeEnabled(): Boolean {
                 return true
             }
 
+            override fun getMovementFlags(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder
+            ): Int {
+                val dragFlags: Int  = ItemTouchHelper.UP or ItemTouchHelper.DOWN
+                val swipeFlags :Int = ItemTouchHelper.START or ItemTouchHelper.END
+                return ItemTouchHelper.Callback.makeMovementFlags(dragFlags, swipeFlags)
+            }
+
             // 위치 swap
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-                Log.d("TAG", "위치 바꿉시다")
-                recyclerView.adapter?.notifyItemMoved(viewHolder.adapterPosition, target.adapterPosition) //
+                Log.d("TAG", "위치 바꿉시다2")
+
+                recyclerView.adapter?.notifyItemMoved(viewHolder.adapterPosition, target.adapterPosition)
                 MyAdapter(lockScreenItems).swap(viewHolder.adapterPosition, target.adapterPosition)
                 return true
             }
@@ -450,7 +443,7 @@ class ToDoLockScreenActivity : AppCompatActivity() {
         }
 
         override fun onItemMove(from_position: Int, to_position: Int) {
-
+            Log.d("TAG", "위치변경")
             val s = datas.get(from_position)
             datas.remove(datas[from_position])
             datas.add(to_position, s)

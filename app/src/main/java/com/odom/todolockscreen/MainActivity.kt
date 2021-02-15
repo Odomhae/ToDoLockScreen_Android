@@ -35,7 +35,6 @@ class MainActivity : AppCompatActivity(){
     //  하나의? 여려개 선택도 가능한게 나은데 // 이 가능한  adapter 설정
     val adapter by lazy {  ArrayAdapter(this, android.R.layout.select_dialog_item, items) }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -131,9 +130,8 @@ class MainActivity : AppCompatActivity(){
     // 알림 박스에서 항목 수정 .. 필요한 기능인가?
     fun showBox(list :ArrayList<String>, position :Int) {
         Log.d("TAG", "show box")
-        // val dia = AlertDialog.Builder(this)
+
         val mDialogView = LayoutInflater.from(this).inflate(R.layout.input_box, null)
-        //AlertDialogBuilder
         val mBuilder = AlertDialog.Builder(this)
             .setView(mDialogView)
 
