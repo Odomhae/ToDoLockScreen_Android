@@ -122,7 +122,6 @@ class ToDoLockScreenActivity : AppCompatActivity() {
         return prefs.getInt(key, 0)
     }
 
-    ////////////////////////
     interface ItemDragListener{
         fun onStartDrag(viewHolder: RecyclerView.ViewHolder)
         fun onItemMove(from_position:Int, to_position:Int)
