@@ -248,6 +248,7 @@ class ToDoLockScreenActivity : AppCompatActivity() {
 
                 recyclerView.adapter?.notifyItemMoved(viewHolder.adapterPosition, target.adapterPosition)
                 MyAdapter(lockScreenItems).swap(viewHolder.adapterPosition, target.adapterPosition)
+                setStringArrayPref("listData", lockScreenItems)
                 return true
             }
 
