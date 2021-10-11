@@ -3,7 +3,6 @@ package com.odom.todolockscreen
 
 import android.app.KeyguardManager
 import android.content.Context
-import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.Rect
 import android.os.Build
@@ -74,8 +73,6 @@ class ToDoLockScreenActivity : AppCompatActivity() {
             initView()
             val textColor = getInt("textColor")
             val listColor = getInt("listColor")
-            Log.d("글자색 전달", textColor.toString())
-            Log.d("아이템색 전달 ", listColor.toString())
 
             (recyclerView.adapter as MyAdapter).getInts(textColor, listColor)
 
@@ -117,7 +114,7 @@ class ToDoLockScreenActivity : AppCompatActivity() {
     }
 
     // 설정값 가져오기
-    fun getInt( key : String) : Int{
+    private fun getInt( key : String) : Int{
         val prefs = getSharedPreferences("SETTINGS", Context.MODE_PRIVATE)
         return prefs.getInt(key, 0)
     }
@@ -136,15 +133,15 @@ class ToDoLockScreenActivity : AppCompatActivity() {
         val backgroundColor = getInt("backgroundColor")
         when(backgroundColor){
             0 -> {
-                lockScreenBackground.setBackgroundColor(resources.getColor(R.color.colorWhite))
+                lockScreenBackground.setBackgroundColor(getColor(R.color.colorWhite))
                 // 삳태바도 같은 색으로 api 21 이상
-                window.statusBarColor = resources.getColor(R.color.colorWhite)
+                window.statusBarColor = getColor(R.color.colorWhite)
                 //상태바 글씨 보이게
                 window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
             }
             1 -> {
-                lockScreenBackground.setBackgroundColor(resources.getColor(R.color.colorGray))
-                window.statusBarColor = resources.getColor(R.color.colorGray)
+                lockScreenBackground.setBackgroundColor(getColor(R.color.colorGray))
+                window.statusBarColor = getColor(R.color.colorGray)
                 window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
             }
             2 ->  {
@@ -243,7 +240,6 @@ class ToDoLockScreenActivity : AppCompatActivity() {
 
             // 위치 swap
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-                Log.d("TAG", "위치 바꿉시다2")
 
                 recyclerView.adapter?.notifyItemMoved(viewHolder.adapterPosition, target.adapterPosition)
                 MyAdapter(lockScreenItems).swap(viewHolder.adapterPosition, target.adapterPosition)
@@ -286,15 +282,13 @@ class ToDoLockScreenActivity : AppCompatActivity() {
                         builder.setTitle(R.string.exit_app_message)
                             .setIcon(R.mipmap.ic_launcher)
                             .setMessage(R.string.nothing_left_message)
-                            .setPositiveButton(R.string.ok,
-                                DialogInterface.OnClickListener { dialog, id ->
-                                    finBt = true
-                                    finish()
-                                })
-                            .setNegativeButton(R.string.cancel,
-                                DialogInterface.OnClickListener { dialog, id ->
-                                    finish()
-                                })
+                            .setPositiveButton(R.string.ok) { dialog, id ->
+                                finBt = true
+                                finish()
+                            }
+                            .setNegativeButton(R.string.cancel) { dialog, id ->
+                                finish()
+                            }
 
                         val alertDialog = builder.create()
                         alertDialog.show()
@@ -341,7 +335,6 @@ class ToDoLockScreenActivity : AppCompatActivity() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.activity_to_do_locksceen, parent, false)
-            Log.d("TAG" , "onCreateViewHolder")
 
             return MyViewHolder(view)
         }
@@ -360,7 +353,6 @@ class ToDoLockScreenActivity : AppCompatActivity() {
             holderItemColor = b
         }
 
-
         fun swap(firstPosition :Int, secondPosition : Int) {
             Log.d("위치변경 ", firstPosition.toString())
             Log.d("위치변경 ", secondPosition.toString())
@@ -372,8 +364,6 @@ class ToDoLockScreenActivity : AppCompatActivity() {
         // 삭제
         fun deleteList(position: Int){
             datas.removeAt(position)
-
-            Log.d("삭제샹", position.toString())
             notifyDataSetChanged()
         }
 
@@ -444,7 +434,7 @@ class ToDoLockScreenActivity : AppCompatActivity() {
 
         override fun onItemMove(from_position: Int, to_position: Int) {
             Log.d("TAG", "위치변경")
-            val s = datas.get(from_position)
+            val s = datas[from_position]
             datas.remove(datas[from_position])
             datas.add(to_position, s)
             notifyItemMoved(from_position, to_position)

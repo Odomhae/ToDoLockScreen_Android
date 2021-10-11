@@ -58,18 +58,12 @@ class MainActivity : AppCompatActivity(){
         listView.choiceMode = ListView.CHOICE_MODE_NONE
 
         listView.setOnItemClickListener { parent, view, position, id ->
-            Log.d("TAG", "클릭")
-
             showBox(items, position)
             setStringArrayPref("listData", items)
         }
 
         //할일 추가
-        addListButton.setOnClickListener {
-            val count = adapter.count
-            Log.d("갯수 : ", count.toString())
-            addList()
-        }
+        addListButton.setOnClickListener { addList() }
 
         // 이전 목록있으면 새로고침 전에도 넣어주시고
         val listPref =  getStringArrayPref("listData")
@@ -96,7 +90,7 @@ class MainActivity : AppCompatActivity(){
     }
 
 
-    fun checkPermission() {
+    private fun checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Settings.canDrawOverlays(this)) {
                 val intent =  Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
@@ -128,8 +122,7 @@ class MainActivity : AppCompatActivity(){
 
 
     // 알림 박스에서 항목 수정 .. 필요한 기능인가?
-    fun showBox(list :ArrayList<String>, position :Int) {
-        Log.d("TAG", "show box")
+    private fun showBox(list :ArrayList<String>, position :Int) {
 
         val mDialogView = LayoutInflater.from(this).inflate(R.layout.input_box, null)
         val mBuilder = AlertDialog.Builder(this)
@@ -142,7 +135,7 @@ class MainActivity : AppCompatActivity(){
 
         //show dialog
         val mAlertDialog = mBuilder.show()
-        //login button click of custom layout
+        // 완료
         bt1.setOnClickListener {
             list[position] = inputEditText.text.toString()
             setStringArrayPref("listData", list)
@@ -153,24 +146,20 @@ class MainActivity : AppCompatActivity(){
 
         // 삭제
         bt2.setOnClickListener {
-            Log.d("TAG", "삭제버튼")
 
             //알림 & 화면 종료
             val builder = AlertDialog.Builder(this@MainActivity)
 
             builder.setTitle(R.string.ask_delete_item)
-                //.setIcon(R.mipmap.ic_launcher)
-                .setPositiveButton(R.string.ok,
-                    DialogInterface.OnClickListener { dialog, id ->
-                        list.removeAt(position)
-                        setStringArrayPref("listData", list)
-                        adapter.notifyDataSetChanged()
-                        mAlertDialog.dismiss()
-                    })
-                .setNegativeButton(R.string.cancel,
-                    DialogInterface.OnClickListener { dialog, id ->
-                        mAlertDialog.dismiss()
-                    })
+                .setPositiveButton(R.string.ok) { dialog, id ->
+                    list.removeAt(position)
+                    setStringArrayPref("listData", list)
+                    adapter.notifyDataSetChanged()
+                    mAlertDialog.dismiss()
+                }
+                .setNegativeButton(R.string.cancel) { dialog, id ->
+                    mAlertDialog.dismiss()
+                }
 
             val alertDialog = builder.create()
             alertDialog.show()
@@ -195,7 +184,7 @@ class MainActivity : AppCompatActivity(){
     }
 
     // JSON 배열로 저장
-    fun setStringArrayPref(key: String, values: ArrayList<String>) {
+    private fun setStringArrayPref(key: String, values: ArrayList<String>) {
         val prefs = getSharedPreferences("SETTINGS", Context.MODE_PRIVATE)
         val editor = prefs.edit()
         val a = JSONArray()
@@ -211,7 +200,7 @@ class MainActivity : AppCompatActivity(){
     }
 
     // 저장된 배열 받아옴
-    fun getStringArrayPref(key: String): ArrayList<String> {
+    private fun getStringArrayPref(key: String): ArrayList<String> {
         val prefs = getSharedPreferences("SETTINGS", Context.MODE_PRIVATE)
         val json = prefs.getString(key, null)
         val urls = ArrayList<String>()

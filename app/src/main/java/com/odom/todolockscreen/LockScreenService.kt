@@ -64,6 +64,7 @@ class LockScreenService :Service(){
             // 클릭시 메인 엑티비티로 이동하게
             val intent = Intent(this, MainActivity::class.java)
             val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+            // 클릭시 설정 엑티비티로 이동하게
             val intent2 = Intent(this, SettingActivity::class.java)
             val pendingIntent2 = PendingIntent.getActivity(this, 0, intent2, 0)
 
