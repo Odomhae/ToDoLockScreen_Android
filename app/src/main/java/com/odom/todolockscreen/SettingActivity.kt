@@ -79,18 +79,6 @@ class SettingActivity : AppCompatActivity() {
 
     class MyPreferenceFragment : PreferenceFragment(){
 
-        private fun setInts(context: Context, key : String, value : Int) {
-            val prefs = context.getSharedPreferences("SETTINGS", Context.MODE_PRIVATE)
-            val editor = prefs!!.edit()
-            editor.putInt(key, value).apply()
-        }
-
-        // 설정값 가져오기
-        private fun getInt( key : String) : Int{
-            val prefs = context.getSharedPreferences("SETTINGS", Context.MODE_PRIVATE)
-            return prefs.getInt(key, 0)
-        }
-
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
 
@@ -100,10 +88,11 @@ class SettingActivity : AppCompatActivity() {
 
             // 글자색
             val textColorCategoryPref = findPreference("textColorCategory") as ListPreference
-            textColorCategoryPref.summary = textColorCategoryPref.entries[getInt("textColor")]
+            textColorCategoryPref.summary = textColorCategoryPref.entries[PreferenceSettings(activity).textColor]
             textColorCategoryPref.setOnPreferenceChangeListener { preference, newValue ->
+
                 val index = textColorCategoryPref.findIndexOfValue(newValue.toString())
-                setInts(context, "textColor", index)
+                PreferenceSettings(activity).textColor = index
                 textColorCategoryPref.summary = textColorCategoryPref.entries[index]
 
                 true
@@ -111,10 +100,11 @@ class SettingActivity : AppCompatActivity() {
 
             // 각 리스트 색
             val listColorCategoryPref = findPreference("listColorCategory") as ListPreference
-            listColorCategoryPref.summary = listColorCategoryPref.entries[getInt("listColor")]
+            listColorCategoryPref.summary = listColorCategoryPref.entries[PreferenceSettings(activity).listColor]
             listColorCategoryPref.setOnPreferenceChangeListener { preference, newValue ->
+
                 val index = listColorCategoryPref.findIndexOfValue(newValue.toString())
-                setInts(context, "listColor", index)
+                PreferenceSettings(activity).listColor = index
                 listColorCategoryPref.summary = listColorCategoryPref.entries[index]
 
                 true
@@ -122,10 +112,11 @@ class SettingActivity : AppCompatActivity() {
 
             // 배경색
             val backgroundColorCategoryPref = findPreference("backgroundColorCategory") as ListPreference
-            backgroundColorCategoryPref.summary = backgroundColorCategoryPref.entries[getInt("backgroundColor")]
+            backgroundColorCategoryPref.summary = backgroundColorCategoryPref.entries[PreferenceSettings(activity).backgroundColor]
             backgroundColorCategoryPref.setOnPreferenceChangeListener { preference, newValue ->
+
                 val index = backgroundColorCategoryPref.findIndexOfValue(newValue.toString())
-                setInts(context, "backgroundColor", index)
+                PreferenceSettings(activity).backgroundColor = index
                 backgroundColorCategoryPref.summary = backgroundColorCategoryPref.entries[index]
 
                 true

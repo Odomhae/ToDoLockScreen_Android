@@ -17,7 +17,7 @@
 
 
         <Button
-            android:id="@+id/btdone"
+            android:id="@+id/btSave"
             android:background="@drawable/border_set"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
             android:textSize="20sp"
             />
         <Button
-            android:id="@+id/btdelete"
+            android:id="@+id/btDelete"
             android:background="@drawable/border_set"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

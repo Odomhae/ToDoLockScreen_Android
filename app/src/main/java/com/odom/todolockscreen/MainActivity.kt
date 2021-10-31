@@ -1,29 +1,16 @@
 package com.odom.todolockscreen
 
-import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.*
 import kotlinx.android.synthetic.main.activity_main.*
-import org.json.JSONArray
-import org.json.JSONException
 import androidx.appcompat.app.AlertDialog
 import android.widget.Toast
-import android.view.KeyEvent.KEYCODE_ENTER
 import android.net.Uri
 import android.provider.Settings
-import android.view.inputmethod.EditorInfo
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-
-
-
 
 
 class MainActivity : AppCompatActivity(){
@@ -59,14 +46,14 @@ class MainActivity : AppCompatActivity(){
 
         listView.setOnItemClickListener { parent, view, position, id ->
             showBox(items, position)
-            setStringArrayPref("listData", items)
+            PreferenceSettings(this).listData = items
         }
 
         //할일 추가
         addListButton.setOnClickListener { addList() }
 
         // 이전 목록있으면 새로고침 전에도 넣어주시고
-        val listPref =  getStringArrayPref("listData")
+        val listPref = PreferenceSettings(this).listData
         if(listPref.size > 0){
             for (value in listPref)
                 items.add(value)
@@ -77,7 +64,7 @@ class MainActivity : AppCompatActivity(){
             items.clear()
             adapter.notifyDataSetChanged()
             //  다시 채움
-            val listPref2 =  getStringArrayPref("listData")
+            val listPref2 = PreferenceSettings(this).listData
             if(listPref2.size > 0){
                 for (value in listPref2)
                     items.add(value)
@@ -91,12 +78,10 @@ class MainActivity : AppCompatActivity(){
 
 
     private fun checkPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!Settings.canDrawOverlays(this)) {
-                val intent =  Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                    Uri.parse("package:$packageName"))
-                startActivityForResult(intent, PermissionsCode)
-            }
+        if (!Settings.canDrawOverlays(this)) {
+            val intent =  Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:$packageName"))
+            startActivityForResult(intent, PermissionsCode)
         }
     }
 
@@ -128,24 +113,25 @@ class MainActivity : AppCompatActivity(){
         val mBuilder = AlertDialog.Builder(this)
             .setView(mDialogView)
 
-        val bt1 = mDialogView.findViewById(R.id.btdone) as Button
-        val bt2 = mDialogView.findViewById(R.id.btdelete) as Button
-        val inputEditText = mDialogView.findViewById(R.id.txtinput) as EditText
+        val btSave : Button = mDialogView.findViewById(R.id.btSave)
+        val btDelete : Button = mDialogView.findViewById(R.id.btDelete)
+        val inputEditText : EditText = mDialogView.findViewById(R.id.txtinput)
         inputEditText.setText(list[position])
 
         //show dialog
         val mAlertDialog = mBuilder.show()
         // 완료
-        bt1.setOnClickListener {
+        btSave.setOnClickListener {
             list[position] = inputEditText.text.toString()
-            setStringArrayPref("listData", list)
+            PreferenceSettings(this).listData = list
             adapter.notifyDataSetChanged()
+
             //dismiss dialog
             mAlertDialog.dismiss()
         }
 
         // 삭제
-        bt2.setOnClickListener {
+        btDelete.setOnClickListener {
 
             //알림 & 화면 종료
             val builder = AlertDialog.Builder(this@MainActivity)
@@ -153,8 +139,9 @@ class MainActivity : AppCompatActivity(){
             builder.setTitle(R.string.ask_delete_item)
                 .setPositiveButton(R.string.ok) { dialog, id ->
                     list.removeAt(position)
-                    setStringArrayPref("listData", list)
+                    PreferenceSettings(this).listData = list
                     adapter.notifyDataSetChanged()
+
                     mAlertDialog.dismiss()
                 }
                 .setNegativeButton(R.string.cancel) { dialog, id ->
@@ -176,46 +163,13 @@ class MainActivity : AppCompatActivity(){
         else{
             // 텍스트 추가
             items.add(editText.text.toString())
+
             // 배열로 저장
-            setStringArrayPref("listData", items)
+            PreferenceSettings(this).listData = items
+
             editText.setText("")
             adapter.notifyDataSetChanged()
         }
     }
 
-    // JSON 배열로 저장
-    private fun setStringArrayPref(key: String, values: ArrayList<String>) {
-        val prefs = getSharedPreferences("SETTINGS", Context.MODE_PRIVATE)
-        val editor = prefs.edit()
-        val a = JSONArray()
-        for (i in 0 until values.size) {
-            a.put(values[i])
-        }
-        if (!values.isEmpty()) {
-            editor.putString(key, a.toString())
-        } else {
-            editor.putString(key, null)
-        }
-        editor.apply()
-    }
-
-    // 저장된 배열 받아옴
-    private fun getStringArrayPref(key: String): ArrayList<String> {
-        val prefs = getSharedPreferences("SETTINGS", Context.MODE_PRIVATE)
-        val json = prefs.getString(key, null)
-        val urls = ArrayList<String>()
-        if (json != null) {
-            try {
-                val a = JSONArray(json)
-                for (i in 0 until a.length()) {
-                    val url = a.optString(i)
-                    urls.add(url)
-                }
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
-
-        }
-        return urls
-    }
 }

@@ -54,10 +54,9 @@ class ToDoLockScreenActivity : AppCompatActivity() {
         setContentView(R.layout.activity_to_do_locksceen)
         swipeToFinish()
 
-        val listPref =  getStringArrayPref("listData")
+        val listPref = PreferenceSettings(this).listData
         // 리스트 비었으면
         if(listPref.size == 0){
-            Log.d("TAG", "할일 없음")
             finish()
         }
         else{
@@ -71,11 +70,10 @@ class ToDoLockScreenActivity : AppCompatActivity() {
             recyclerView.addItemDecoration(spaceDecoration)
 
             initView()
-            val textColor = getInt("textColor")
-            val listColor = getInt("listColor")
 
+            val textColor = PreferenceSettings(this).textColor
+            val listColor = PreferenceSettings(this).listColor
             (recyclerView.adapter as MyAdapter).getInts(textColor, listColor)
-
         }
 
     }
@@ -113,14 +111,7 @@ class ToDoLockScreenActivity : AppCompatActivity() {
 
     }
 
-    // 설정값 가져오기
-    private fun getInt( key : String) : Int{
-        val prefs = getSharedPreferences("SETTINGS", Context.MODE_PRIVATE)
-        return prefs.getInt(key, 0)
-    }
-
     interface ItemDragListener{
-        fun onStartDrag(viewHolder: RecyclerView.ViewHolder)
         fun onItemMove(from_position:Int, to_position:Int)
     }
 
@@ -130,7 +121,7 @@ class ToDoLockScreenActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         // 배경색
-        val backgroundColor = getInt("backgroundColor")
+        val backgroundColor = PreferenceSettings(this).backgroundColor
         when(backgroundColor){
             0 -> {
                 lockScreenBackground.setBackgroundColor(getColor(R.color.colorWhite))
@@ -243,7 +234,7 @@ class ToDoLockScreenActivity : AppCompatActivity() {
 
                 recyclerView.adapter?.notifyItemMoved(viewHolder.adapterPosition, target.adapterPosition)
                 MyAdapter(lockScreenItems).swap(viewHolder.adapterPosition, target.adapterPosition)
-                setStringArrayPref("listData", lockScreenItems)
+                PreferenceSettings(this@ToDoLockScreenActivity).listData = lockScreenItems
                 return true
             }
 
@@ -269,7 +260,7 @@ class ToDoLockScreenActivity : AppCompatActivity() {
                     (recyclerView.adapter as MyAdapter).deleteList(viewHolder.adapterPosition)
 
                     lockScreenItems.removeAt(viewHolder.layoutPosition)
-                    setStringArrayPref("listData", lockScreenItems)
+                    PreferenceSettings(this@ToDoLockScreenActivity).listData = lockScreenItems
 
                     mAlertDialog.dismiss()
 
@@ -310,7 +301,6 @@ class ToDoLockScreenActivity : AppCompatActivity() {
         // 할일 없고 앱 종료 버튼 눌렸으면
         // 앱 종료
         if (finn && finBt){
-            Log.d("TAG","앱 프로세스 종료")
             exitProcess(0)
         }
     }
@@ -348,14 +338,13 @@ class ToDoLockScreenActivity : AppCompatActivity() {
         }
 
         // 설정값 넣어주고
-        fun getInts(a :Int, b :Int){
-            holderTextColor = a
-            holderItemColor = b
+        fun getInts(textColor :Int, listColor :Int){
+            holderTextColor = textColor
+            holderItemColor = listColor
         }
 
+        // 순서변경
         fun swap(firstPosition :Int, secondPosition : Int) {
-            Log.d("위치변경 ", firstPosition.toString())
-            Log.d("위치변경 ", secondPosition.toString())
 
             Collections.swap(datas, firstPosition, secondPosition)
             notifyItemMoved(firstPosition, secondPosition)
@@ -428,15 +417,10 @@ class ToDoLockScreenActivity : AppCompatActivity() {
             holder.itemView.requestLayout()
         }
 
-        override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
-            TODO("Not yet implemented")
-        }
-
         override fun onItemMove(from_position: Int, to_position: Int) {
-            Log.d("TAG", "위치변경")
-            val s = datas[from_position]
+            val data = datas[from_position]
             datas.remove(datas[from_position])
-            datas.add(to_position, s)
+            datas.add(to_position, data)
             notifyItemMoved(from_position, to_position)
         }
     }
@@ -445,40 +429,4 @@ class ToDoLockScreenActivity : AppCompatActivity() {
         var textField = view.recyclerview_text
     }
 
-    // JSON 배열로 저장
-    fun setStringArrayPref(key: String, values: ArrayList<String>) {
-        val prefs = getSharedPreferences("SETTINGS", Context.MODE_PRIVATE)
-        val editor = prefs.edit()
-        val a = JSONArray()
-        for (i in 0 until values.size) {
-            a.put(values[i])
-        }
-        if (!values.isEmpty()) {
-            editor.putString(key, a.toString())
-        } else {
-            editor.putString(key, null)
-        }
-        editor.apply()
-    }
-
-
-    // 저장된 배열 받아옴
-    fun getStringArrayPref(key: String): ArrayList<String> {
-        val prefs = getSharedPreferences("SETTINGS", Context.MODE_PRIVATE)
-        val json = prefs.getString(key, null)
-        val urls = ArrayList<String>()
-        if (json != null) {
-            try {
-                val a = JSONArray(json)
-                for (i in 0 until a.length()) {
-                    val url = a.optString(i)
-                    urls.add(url)
-                }
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
-
-        }
-        return urls
-    }
 }
