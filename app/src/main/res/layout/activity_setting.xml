@@ -21,7 +21,7 @@
         android:id="@+id/SettingLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/item_view"
+        android:background="@drawable/shape_item_view_default"
         android:orientation="horizontal"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="2dp">
@@ -49,20 +49,21 @@
             android:src="@drawable/ic_close_black_24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
     </LinearLayout>
 
     <FrameLayout
-    android:id="@+id/frameLayout"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="1dp"
-    android:layout_marginTop="10dp"
-    android:layout_marginEnd="1dp"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/SettingLinearLayout"
-    app:layout_constraintHorizontal_bias="1.0"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintVertical_bias="0.103" />
+        android:id="@+id/frameLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SettingLinearLayout"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_bias="0.103" />
 
     <com.kakao.adfit.ads.ba.BannerAdView
         android:id="@+id/adFitView"

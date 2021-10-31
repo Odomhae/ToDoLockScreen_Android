@@ -3,6 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/drawable/item_view.xml" value="0.3921875" />
+        <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/drawable/shape_item.xml" value="0.3921875" />
+        <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/layout/activity_main.xml" value="0.27355072463768115" />
+        <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/layout/activity_setting.xml" value="0.37604166666666666" />
         <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/layout/activity_to_do_locksceen.xml" value="0.25" />
         <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/layout/input_box.xml" value="0.37604166666666666" />
       </map>

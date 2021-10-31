@@ -3,11 +3,12 @@ package com.odom.todolockscreen
 
 import android.app.KeyguardManager
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Rect
+import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
@@ -15,13 +16,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.kakao.adfit.common.util.v
 import kotlinx.android.synthetic.main.activity_to_do_locksceen.*
 import kotlinx.android.synthetic.main.activity_to_do_locksceen.view.*
-import org.json.JSONArray
-import org.json.JSONException
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.system.exitProcess
+
 
 class ToDoLockScreenActivity : AppCompatActivity() {
 
@@ -384,29 +385,112 @@ class ToDoLockScreenActivity : AppCompatActivity() {
             }
 
             // 각 아이템 색
+            // TODO: 2021-10-31
+            // 리스트 둥글게
+            holder.itemView.setBackgroundResource(R.drawable.shape_item)
             when(holderItemColor){
-                0 -> holder.itemView.setBackgroundResource(R.color.colorBlack)
-                1 -> holder.itemView.setBackgroundResource(R.color.colorGray)
-                2 -> holder.itemView.setBackgroundResource(R.color.colorWhite)
-                3 -> holder.itemView.setBackgroundResource(R.color.colorRed)
-                4 -> holder.itemView.setBackgroundResource(R.color.colorCrimson)
-                5 -> holder.itemView.setBackgroundResource(R.color.colorSalmon)
-                6 -> holder.itemView.setBackgroundResource(R.color.colorBeige)
-                7 -> holder.itemView.setBackgroundResource(R.color.colorOrange)
-                8 -> holder.itemView.setBackgroundResource(R.color.colorBrown)
-                9 -> holder.itemView.setBackgroundResource(R.color.colorWalnut)
-                10 -> holder.itemView.setBackgroundResource(R.color.colorBlue)
-                11-> holder.itemView.setBackgroundResource(R.color.colorMalibu)
-                12 -> holder.itemView.setBackgroundResource(R.color.colorGreen)
-                13 -> holder.itemView.setBackgroundResource(R.color.colorYellowGreen)
-                14 -> holder.itemView.setBackgroundResource(R.color.colorMint)
-                15 -> holder.itemView.setBackgroundResource(R.color.colorYellow)
-                16 -> holder.itemView.setBackgroundResource(R.color.colorPink)
-                17 -> holder.itemView.setBackgroundResource(R.color.colorViolet)
-                18 -> holder.itemView.setBackgroundResource(R.color.colorMagenta)
-                19 -> holder.itemView.setBackgroundResource(R.color.colorPurple)
+                0 -> {
+                   // holder.itemView.setBackgroundResource(R.color.colorBlack)
+                    val drawable = holder.itemView.background as GradientDrawable
+                    drawable.setColor(Color.parseColor("#000000"))
+                }
+                1 -> {
+                   // holder.itemView.setBackgroundResource(R.color.colorGray)
+                    val drawable = holder.itemView.background as GradientDrawable
+                    drawable.setColor(Color.parseColor("#DCDCDC"))
+                }
+                2 -> {
+                   // holder.itemView.setBackgroundResource(R.color.colorWhite)
+                    val drawable = holder.itemView.background as GradientDrawable
+                    drawable.setColor(Color.parseColor("#ffffff"))
+                }
+                3 -> {
+                 //   holder.itemView.setBackgroundResource(R.color.colorRed)
+                    val drawable = holder.itemView.background as GradientDrawable
+                    drawable.setColor(Color.parseColor("#FF0023"))
+                }
+                4 -> {
+                 //   holder.itemView.setBackgroundResource(R.color.colorCrimson)
+                    val drawable = holder.itemView.background as GradientDrawable
+                    drawable.setColor(Color.parseColor("#b80f0a"))
+                }
+                5 -> {
+                   // holder.itemView.setBackgroundResource(R.color.colorSalmon)
+                    val drawable = holder.itemView.background as GradientDrawable
+                    drawable.setColor(Color.parseColor("#FA8072"))
+                }
+                6 -> {
+                 //   holder.itemView.setBackgroundResource(R.color.colorBeige)
+                    val drawable = holder.itemView.background as GradientDrawable
+                    drawable.setColor(Color.parseColor("#F2DFD2"))
+                }
+                7 -> {
+                //    holder.itemView.setBackgroundResource(R.color.colorOrange)
+                    val drawable = holder.itemView.background as GradientDrawable
+                    drawable.setColor(Color.parseColor("#f37021"))
+                }
+                8 -> {
+                //    holder.itemView.setBackgroundResource(R.color.colorBrown)
+                    val drawable = holder.itemView.background as GradientDrawable
+                    drawable.setColor(Color.parseColor("#7c4700"))
+                }
+                9 -> {
+               //    holder.itemView.setBackgroundResource(R.color.colorWalnut)
+                    val drawable = holder.itemView.background as GradientDrawable
+                    drawable.setColor(Color.parseColor("#432711"))
+                }
+                10 -> {
+               //    holder.itemView.setBackgroundResource(R.color.colorBlue)
+                    val drawable = holder.itemView.background as GradientDrawable
+                    drawable.setColor(Color.parseColor("#2C40DC"))
+                }
+                11-> {
+               //     holder.itemView.setBackgroundResource(R.color.colorMalibu)
+                    val drawable = holder.itemView.background as GradientDrawable
+                    drawable.setColor(Color.parseColor("#ff89d3fb"))
+                }
+                12 -> {
+                //    holder.itemView.setBackgroundResource(R.color.colorGreen)
+                    val drawable = holder.itemView.background as GradientDrawable
+                    drawable.setColor(Color.parseColor("#1CAE4C"))
+                }
+                13 -> {
+               //     holder.itemView.setBackgroundResource(R.color.colorYellowGreen)
+                    val drawable = holder.itemView.background as GradientDrawable
+                    drawable.setColor(Color.parseColor("#52D017"))
+                }
+                14 -> {
+                //    holder.itemView.setBackgroundResource(R.color.colorMint)
+                    val drawable = holder.itemView.background as GradientDrawable
+                    drawable.setColor(Color.parseColor("#69e0a5"))
+                }
+                15 -> {
+               //     holder.itemView.setBackgroundResource(R.color.colorYellow)
+                    val drawable = holder.itemView.background as GradientDrawable
+                    drawable.setColor(Color.parseColor("#e8f321"))
+                }
+                16 -> {
+                 //   holder.itemView.setBackgroundResource(R.color.colorPink)
+                    val drawable = holder.itemView.background as GradientDrawable
+                    drawable.setColor(Color.parseColor("#f987c5"))
+                }
+                17 -> {
+               //     holder.itemView.setBackgroundResource(R.color.colorViolet)
+                    val drawable = holder.itemView.background as GradientDrawable
+                    drawable.setColor(Color.parseColor("#cc99ff"))
+                }
+                18 -> {
+                 //   holder.itemView.setBackgroundResource(R.color.colorMagenta)
+                    val drawable = holder.itemView.background as GradientDrawable
+                    drawable.setColor(Color.parseColor("#FF00FF"))
+                }
+                19 -> {
+               //     holder.itemView.setBackgroundResource(R.color.colorPurple)
+                    val drawable = holder.itemView.background as GradientDrawable
+                    drawable.setColor(Color.parseColor("#8b00ff"))
+                }
 
-                else -> holder.itemView.setBackgroundResource(R.drawable.item_view)
+                else -> holder.itemView.setBackgroundResource(R.drawable.shape_item_view_default)
             }
 
             holder.itemView.isSelected = true
