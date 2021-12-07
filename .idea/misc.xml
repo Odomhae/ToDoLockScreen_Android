@@ -5,6 +5,29 @@
       <map>
         <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/drawable/item_view.xml" value="0.3921875" />
         <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/drawable/shape_item.xml" value="0.3921875" />
+        <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/drawable/shape_item_beige.xml" value="0.16" />
+        <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/drawable/shape_item_black.xml" value="0.18611111111111112" />
+        <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/drawable/shape_item_blue.xml" value="0.1" />
+        <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/drawable/shape_item_brown.xml" value="0.1" />
+        <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/drawable/shape_item_crimson.xml" value="0.1" />
+        <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/drawable/shape_item_gray.xml" value="0.19166666666666668" />
+        <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/drawable/shape_item_green.xml" value="0.1" />
+        <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/drawable/shape_item_magenta.xml" value="0.1" />
+        <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/drawable/shape_item_malibu.xml" value="0.1" />
+        <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/drawable/shape_item_mint.xml" value="0.1" />
+        <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/drawable/shape_item_orange.xml" value="0.1" />
+        <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/drawable/shape_item_pink.xml" value="0.1" />
+        <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/drawable/shape_item_purple.xml" value="0.1" />
+        <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/drawable/shape_item_red.xml" value="0.1" />
+        <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/drawable/shape_item_salmon.xml" value="0.1" />
+        <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/drawable/shape_item_view_default.xml" value="0.15925925925925927" />
+        <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/drawable/shape_item_violet.xml" value="0.1" />
+        <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/drawable/shape_item_walnut.xml" value="0.1" />
+        <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/drawable/shape_item_white.xml" value="0.1" />
+        <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/drawable/shape_item_yelloGreen.xml" value="0.1" />
+        <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/drawable/shape_item_yellow.xml" value="0.125" />
+        <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/drawable/shape_item_yellowGreen.xml" value="0.18518518518518517" />
+        <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/drawable/shape_item_yellowgreen.xml" value="0.20833333333333334" />
         <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/layout/activity_main.xml" value="0.27355072463768115" />
         <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/layout/activity_setting.xml" value="0.37604166666666666" />
         <entry key="..\:/Users/jihoo/AndroidStudioProjects/TodoLockscreen/app/src/main/res/layout/activity_to_do_locksceen.xml" value="0.25" />

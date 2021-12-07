@@ -3,10 +3,7 @@ package com.odom.todolockscreen
 
 import android.app.KeyguardManager
 import android.content.Context
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.graphics.Rect
-import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
 import android.view.*
@@ -16,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.kakao.adfit.common.util.v
 import com.odom.todolockscreen.adapter.RecyclerViewAdapter
 import kotlinx.android.synthetic.main.activity_to_do_locksceen.*
 import kotlinx.android.synthetic.main.activity_to_do_locksceen.view.*
@@ -135,79 +131,78 @@ class ToDoLockScreenActivity : AppCompatActivity() {
                 window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
             }
             2 ->  {
-                lockScreenBackground.setBackgroundColor(resources.getColor(R.color.colorBlack))
-                window.statusBarColor = resources.getColor(R.color.colorBlack)
+                lockScreenBackground.setBackgroundColor(getColor(R.color.colorBlack))
+                window.statusBarColor = getColor(R.color.colorBlack)
             }
             3 ->  {
-                lockScreenBackground.setBackgroundColor(resources.getColor(R.color.colorRed))
-                window.statusBarColor = resources.getColor(R.color.colorRed)
+                lockScreenBackground.setBackgroundColor(getColor(R.color.colorRed))
+                window.statusBarColor = getColor(R.color.colorRed)
             }
             4 -> {
-                lockScreenBackground.setBackgroundColor(resources.getColor(R.color.colorCrimson))
-                window.statusBarColor = resources.getColor(R.color.colorCrimson)
+                lockScreenBackground.setBackgroundColor(getColor(R.color.colorCrimson))
+                window.statusBarColor = getColor(R.color.colorCrimson)
             }
             5 ->  {
-                lockScreenBackground.setBackgroundColor(resources.getColor(R.color.colorSalmon))
-                window.statusBarColor = resources.getColor(R.color.colorSalmon)
+                lockScreenBackground.setBackgroundColor(getColor(R.color.colorSalmon))
+                window.statusBarColor = getColor(R.color.colorSalmon)
             }
             6 ->  {
-                lockScreenBackground.setBackgroundColor(resources.getColor(R.color.colorBeige))
-                window.statusBarColor = resources.getColor(R.color.colorBeige)
+                lockScreenBackground.setBackgroundColor(getColor(R.color.colorBeige))
+                window.statusBarColor = getColor(R.color.colorBeige)
                 window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
             }
             7 ->  {
-                lockScreenBackground.setBackgroundColor(resources.getColor(R.color.colorOrange))
-                window.statusBarColor = resources.getColor(R.color.colorOrange)
+                lockScreenBackground.setBackgroundColor(getColor(R.color.colorOrange))
+                window.statusBarColor = getColor(R.color.colorOrange)
             }
             8 ->  {
-                lockScreenBackground.setBackgroundColor(resources.getColor(R.color.colorBrown))
-                window.statusBarColor = resources.getColor(R.color.colorBrown)
+                lockScreenBackground.setBackgroundColor(getColor(R.color.colorBrown))
+                window.statusBarColor = getColor(R.color.colorBrown)
             }
             9 ->  {
-                lockScreenBackground.setBackgroundColor(resources.getColor(R.color.colorWalnut))
-                window.statusBarColor = resources.getColor(R.color.colorWalnut)
+                lockScreenBackground.setBackgroundColor(getColor(R.color.colorWalnut))
+                window.statusBarColor = getColor(R.color.colorWalnut)
             }
             10 ->  {
-                lockScreenBackground.setBackgroundColor(resources.getColor(R.color.colorBlue))
-                window.statusBarColor = resources.getColor(R.color.colorBlue)
+                lockScreenBackground.setBackgroundColor(getColor(R.color.colorBlue))
+                window.statusBarColor = getColor(R.color.colorBlue)
             }
             11 ->  {
-                lockScreenBackground.setBackgroundColor(resources.getColor(R.color.colorMalibu))
-                window.statusBarColor = resources.getColor(R.color.colorMalibu)
+                lockScreenBackground.setBackgroundColor(getColor(R.color.colorMalibu))
+                window.statusBarColor = getColor(R.color.colorMalibu)
             }
             12 ->  {
-                lockScreenBackground.setBackgroundColor(resources.getColor(R.color.colorGreen))
-                window.statusBarColor = resources.getColor(R.color.colorGreen)
+                lockScreenBackground.setBackgroundColor(getColor(R.color.colorGreen))
+                window.statusBarColor = getColor(R.color.colorGreen)
             }
             13 ->  {
-                lockScreenBackground.setBackgroundColor(resources.getColor(R.color.colorYellowGreen))
-                window.statusBarColor = resources.getColor(R.color.colorYellowGreen)
+                lockScreenBackground.setBackgroundColor(getColor(R.color.colorYellowGreen))
+                window.statusBarColor = getColor(R.color.colorYellowGreen)
             }
             14 ->  {
-                lockScreenBackground.setBackgroundColor(resources.getColor(R.color.colorMint))
-                window.statusBarColor = resources.getColor(R.color.colorMint)
+                lockScreenBackground.setBackgroundColor(getColor(R.color.colorMint))
+                window.statusBarColor = getColor(R.color.colorMint)
             }
             15 ->  {
-                lockScreenBackground.setBackgroundColor(resources.getColor(R.color.colorYellow))
-                window.statusBarColor = resources.getColor(R.color.colorYellow)
+                lockScreenBackground.setBackgroundColor(getColor(R.color.colorYellow))
+                window.statusBarColor = getColor(R.color.colorYellow)
                 window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-
             }
             16 ->  {
-                lockScreenBackground.setBackgroundColor(resources.getColor(R.color.colorPink))
-                window.statusBarColor = resources.getColor(R.color.colorPink)
+                lockScreenBackground.setBackgroundColor(getColor(R.color.colorPink))
+                window.statusBarColor = getColor(R.color.colorPink)
             }
             17 ->  {
-                lockScreenBackground.setBackgroundColor(resources.getColor(R.color.colorViolet))
-                window.statusBarColor = resources.getColor(R.color.colorViolet)
+                lockScreenBackground.setBackgroundColor(getColor(R.color.colorViolet))
+                window.statusBarColor = getColor(R.color.colorViolet)
             }
             18 ->  {
-                lockScreenBackground.setBackgroundColor(resources.getColor(R.color.colorMagenta))
-                window.statusBarColor = resources.getColor(R.color.colorMagenta)
+                lockScreenBackground.setBackgroundColor(getColor(R.color.colorMagenta))
+                window.statusBarColor = getColor(R.color.colorMagenta)
             }
             19 ->  {
-                lockScreenBackground.setBackgroundColor(resources.getColor(R.color.colorPurple))
-                window.statusBarColor = resources.getColor(R.color.colorPurple)
+                lockScreenBackground.setBackgroundColor(getColor(R.color.colorPurple))
+                window.statusBarColor = getColor(R.color.colorPurple)
             }
         }
 
