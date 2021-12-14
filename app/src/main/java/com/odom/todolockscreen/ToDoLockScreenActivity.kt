@@ -114,6 +114,8 @@ class ToDoLockScreenActivity : AppCompatActivity() {
     fun initView() {
 
         recyclerView.layoutManager = LinearLayoutManager(this)
+        //전체화면
+        // window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
         // 배경색
         val backgroundColor = PreferenceSettings(this).backgroundColor

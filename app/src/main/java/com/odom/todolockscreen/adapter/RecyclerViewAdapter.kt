@@ -6,6 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.odom.todolockscreen.PreferenceSettings
 import com.odom.todolockscreen.R
@@ -15,7 +18,11 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class RecyclerViewAdapter(private val context: Context, private var datas: ArrayList<String>)
-    : RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder>(), ToDoLockScreenActivity.ItemDragListener {
+    : ListAdapter<ArrayList<String>, RecyclerViewAdapter.MyViewHolder>(TodoDiffCallback()),
+    ToDoLockScreenActivity.ItemDragListener {
+
+    private val newList = currentList.toMutableList()
+    private var differ = AsyncListDiffer(this, TodoDiffCallback())
 
     class MyViewHolder(view: View): RecyclerView.ViewHolder(view) {
         var textField : TextView = view.recyclerview_text
@@ -95,19 +102,33 @@ class RecyclerViewAdapter(private val context: Context, private var datas: Array
     fun swap(firstPosition :Int, secondPosition : Int) {
 
         Collections.swap(datas, firstPosition, secondPosition)
-        notifyItemMoved(firstPosition, secondPosition)
+        submitList(newList)
     }
 
     // 삭제
     fun deleteList(position: Int){
         datas.removeAt(position)
         notifyDataSetChanged()
+        differ.submitList(newList)
+       // submitList(newList)
     }
 
     override fun onItemMove(from_position: Int, to_position: Int) {
         val data = datas[from_position]
         datas.remove(datas[from_position])
         datas.add(to_position, data)
-        notifyItemMoved(from_position, to_position)
+
+        submitList(newList)
     }
+}
+
+class TodoDiffCallback() : DiffUtil.ItemCallback<ArrayList<String>>() {
+    override fun areItemsTheSame(oldItem: ArrayList<String>, newItem: ArrayList<String>): Boolean {
+        return oldItem == newItem
+    }
+
+    override fun areContentsTheSame(oldItem: ArrayList<String>, newItem: ArrayList<String>): Boolean {
+        return oldItem == newItem
+    }
+
 }
