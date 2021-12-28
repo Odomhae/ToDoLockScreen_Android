@@ -2,6 +2,7 @@ package com.odom.todolockscreen.adapter
 
 import android.content.Context
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +23,6 @@ class RecyclerViewAdapter(private val context: Context, private var datas: Array
     ToDoLockScreenActivity.ItemDragListener {
 
     private val newList = currentList.toMutableList()
-    private var differ = AsyncListDiffer(this, TodoDiffCallback())
 
     class MyViewHolder(view: View): RecyclerView.ViewHolder(view) {
         var textField : TextView = view.recyclerview_text
@@ -61,7 +61,6 @@ class RecyclerViewAdapter(private val context: Context, private var datas: Array
 
         // 아이템 색
         // 리스트 둥글게
-        // TODO: 2021-12-07  
         when(itemHolderColor){
            0 -> view.setBackgroundResource(R.drawable.shape_item_black)
            1 -> view.setBackgroundResource(R.drawable.shape_item_gray)
@@ -108,9 +107,9 @@ class RecyclerViewAdapter(private val context: Context, private var datas: Array
     // 삭제
     fun deleteList(position: Int){
         datas.removeAt(position)
-        notifyDataSetChanged()
-        differ.submitList(newList)
-       // submitList(newList)
+        // TODO: 2021-12-28 DiffUtil
+        notifyItemRemoved(position)
+      //  submitList(newList)
     }
 
     override fun onItemMove(from_position: Int, to_position: Int) {
