@@ -61,19 +61,16 @@ class LockScreenService :Service(){
             val builder = Notification.Builder(this, ANDROID_CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher_foreground)
 
-            // 클릭시 메인 엑티비티로 이동하게
-            val intent = Intent(this, MainActivity::class.java)
-            val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
-            // 클릭시 설정 엑티비티로 이동하게
-            val intent2 = Intent(this, SettingActivity::class.java)
-            val pendingIntent2 = PendingIntent.getActivity(this, 0, intent2, 0)
-
-            val asb : CharSequence = resources.getString(R.string.view_app)
-            val asb2 : CharSequence = resources.getString(R.string.setting_app)
+            // 클릭시 메인 엑티비티로 이동
+            val intentToMain = Intent(this, MainActivity::class.java)
+            val pendingIntent = PendingIntent.getActivity(this, 0, intentToMain, 0)
+            // 클릭시 설정 엑티비티로 이동
+            val intentToSetting = Intent(this, SettingActivity::class.java)
+            val pendingIntent2 = PendingIntent.getActivity(this, 0, intentToSetting, 0)
 
             builder.setContentIntent(pendingIntent)
-            builder.addAction(android.R.drawable.ic_menu_view,asb, pendingIntent)
-            builder.addAction(android.R.drawable.ic_menu_view, asb2, pendingIntent2)
+            builder.addAction(android.R.drawable.ic_menu_view, resources.getString(R.string.view_app), pendingIntent)
+            builder.addAction(android.R.drawable.ic_menu_view, resources.getString(R.string.setting_app), pendingIntent2)
 
             val notification = builder.build()
 
