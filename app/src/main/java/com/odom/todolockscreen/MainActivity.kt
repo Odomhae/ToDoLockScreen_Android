@@ -1,16 +1,17 @@
 package com.odom.todolockscreen
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.*
+import android.view.inputmethod.EditorInfo
 import android.widget.*
-import kotlinx.android.synthetic.main.activity_main.*
+import android.widget.TextView.OnEditorActionListener
 import androidx.appcompat.app.AlertDialog
-import android.widget.Toast
-import android.net.Uri
-import android.provider.Settings
+import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity(){
@@ -73,6 +74,15 @@ class MainActivity : AppCompatActivity(){
             adapter.notifyDataSetChanged()
             pullToRefresh.isRefreshing = false
         }
+
+        editText.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                addList()
+                return@OnEditorActionListener true
+            }
+
+            false
+        })
 
     }
 

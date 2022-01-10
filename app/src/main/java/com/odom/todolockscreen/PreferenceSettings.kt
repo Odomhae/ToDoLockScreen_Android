@@ -16,12 +16,17 @@ class PreferenceSettings(context: Context) {
         // string -> JSONArray -> ArrayList
         get() {
             val listString = prefs.getString("listData", null)
-            val jsonArray =  JSONArray(listString)
-
             val stuffList = ArrayList<String>()
-            for (i in 0 until jsonArray.length()) {
-                val stuff = jsonArray.optString(i) // getString
-                stuffList.add(stuff)
+
+            try {
+                val jsonArray =  JSONArray(listString)
+                for (i in 0 until jsonArray.length()) {
+                    val stuff = jsonArray.optString(i) // getString
+                    stuffList.add(stuff)
+                }
+
+            }catch (e:Exception){
+                e.printStackTrace()
             }
 
             return stuffList
