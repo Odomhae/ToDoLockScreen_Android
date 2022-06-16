@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity(){
     }
 
     private fun loadBanner() {
-        mAdView.adUnitId = resources.getString(R.string.TEST_banner_ad_unit_id)
+        mAdView.adUnitId = resources.getString(R.string.REAL_banner_ad_unit_id)
         mAdView.setAdSize(adSize) //  = AdSize.BANNER //
 
         val adRequest = AdRequest
