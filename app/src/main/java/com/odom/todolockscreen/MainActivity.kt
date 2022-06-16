@@ -12,6 +12,7 @@ import android.widget.*
 import android.widget.TextView.OnEditorActionListener
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.size
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
@@ -112,12 +113,11 @@ class MainActivity : AppCompatActivity(){
 
     private fun loadBanner() {
         mAdView.adUnitId = resources.getString(R.string.TEST_banner_ad_unit_id)
-        mAdView.adSize = adSize
+        mAdView.setAdSize(adSize) //  = AdSize.BANNER //
 
         val adRequest = AdRequest
             .Builder()
             .build()
-        // .addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build()
 
         // Start loading the ad in the background.
         mAdView.loadAd(adRequest)

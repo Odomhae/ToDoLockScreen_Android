@@ -8,6 +8,7 @@ import android.content.IntentFilter
 import android.graphics.Color
 import android.os.Build
 import android.os.IBinder
+import androidx.annotation.RequiresApi
 
 
 class LockScreenService :Service(){
@@ -30,6 +31,7 @@ class LockScreenService :Service(){
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.S)
     @SuppressLint("ObsoleteSdkInt")
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
@@ -63,10 +65,10 @@ class LockScreenService :Service(){
 
             // 클릭시 메인 엑티비티로 이동
             val intentToMain = Intent(this, MainActivity::class.java)
-            val pendingIntent = PendingIntent.getActivity(this, 0, intentToMain, 0)
+            val pendingIntent = PendingIntent.getActivity(this, 0, intentToMain, PendingIntent.FLAG_IMMUTABLE)
             // 클릭시 설정 엑티비티로 이동
             val intentToSetting = Intent(this, SettingActivity::class.java)
-            val pendingIntent2 = PendingIntent.getActivity(this, 0, intentToSetting, 0)
+            val pendingIntent2 = PendingIntent.getActivity(this, 0, intentToSetting, PendingIntent.FLAG_IMMUTABLE)
 
             builder.setContentIntent(pendingIntent)
             builder.addAction(android.R.drawable.ic_menu_view, resources.getString(R.string.view_app), pendingIntent)
