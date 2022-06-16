@@ -46,32 +46,6 @@ class SettingActivity : AppCompatActivity() {
 
         fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit()
 
-        //애드핏 광고
-        val adFitView = adFitView!!
-        adFitView.setClientId("DAN-1jxzd2jz2z5md")
-
-        // activity 또는 fragment의 lifecycle에 따라 호출
-        lifecycle.addObserver(object : LifecycleObserver {
-
-            @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-            fun onResume() {
-                adFitView.resume()
-            }
-
-            @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-            fun onPause() {
-                adFitView.pause()
-            }
-
-            @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-            fun onDestroy() {
-                adFitView.destroy()
-            }
-
-        })
-
-        adFitView.loadAd()  // 광고 요청
-
         closeImage.setOnClickListener {
             finish()
         }

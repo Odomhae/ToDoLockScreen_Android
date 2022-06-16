@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
@@ -11,6 +12,10 @@ import android.widget.*
 import android.widget.TextView.OnEditorActionListener
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -22,6 +27,20 @@ class MainActivity : AppCompatActivity(){
     private val PermissionsCode = 100
     //  하나의? 여려개 선택도 가능한게 나은데 // 이 가능한  adapter 설정
     val adapter by lazy {  ArrayAdapter(this, android.R.layout.select_dialog_item, items) }
+
+    // 광고
+    lateinit var mAdView : AdView
+    private val adSize: AdSize
+        get() {
+            val display = windowManager.defaultDisplay
+            val outMetrics = DisplayMetrics()
+            display.getMetrics(outMetrics)
+
+            val density = outMetrics.density
+            val adWidthPixels = outMetrics.widthPixels.toFloat()
+            val adWidth = (adWidthPixels / density).toInt()
+            return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, adWidth)
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +103,24 @@ class MainActivity : AppCompatActivity(){
             false
         })
 
+        // 배너 광고
+        MobileAds.initialize(this) {}
+        mAdView = AdView(this)
+        adMobView.addView(mAdView)
+        loadBanner()
+    }
+
+    private fun loadBanner() {
+        mAdView.adUnitId = resources.getString(R.string.TEST_banner_ad_unit_id)
+        mAdView.adSize = adSize
+
+        val adRequest = AdRequest
+            .Builder()
+            .build()
+        // .addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build()
+
+        // Start loading the ad in the background.
+        mAdView.loadAd(adRequest)
     }
 
 

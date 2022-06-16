@@ -20,8 +20,10 @@
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/TEST_admob_app_id"/>
 
-        <activity android:name=".ToDoLockScreenActivity" />
-        <activity android:name=".SettingActivity" />
+        <activity android:name=".ToDoLockScreenActivity"
+            android:exported="true"/>
+        <activity android:name=".SettingActivity"
+            android:exported="true"/>
 
         <service
             android:name=".LockScreenService"
@@ -29,7 +31,8 @@
             android:permission= "android.permission.SYSTEM_ALERT_WINDOW"
             android:exported="true" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
