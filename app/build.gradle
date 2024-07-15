@@ -5,14 +5,14 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 34
     buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "com.odom.todolockscreen"
         minSdkVersion 23
-        targetSdkVersion 33
-        versionCode 7
-        versionName "1.6"
+        targetSdkVersion 34
+        versionCode 8
+        versionName "1.7"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
