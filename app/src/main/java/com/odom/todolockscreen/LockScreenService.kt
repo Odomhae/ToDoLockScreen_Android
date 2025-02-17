@@ -48,8 +48,9 @@ class LockScreenService :Service(){
             }
         }
 
+        // TargetSdk 34부터 포그라운드 권한 설정하면 스토어에 영상찍어서 업로드해야함 ,,
         // 안드로이드 오레오 버전부터 백그라운드 제약이 잇어 포그라운드 서비스 실행
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE){
             // Notification(상단알림) 채널 설정
             val chan = NotificationChannel(ANDROID_CHANNEL_ID, "MyService", NotificationManager.IMPORTANCE_NONE)
             chan.lightColor = Color.BLUE

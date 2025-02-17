@@ -2,6 +2,7 @@ package com.odom.todolockscreen
 
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -52,6 +53,11 @@ class SettingActivity : AppCompatActivity() {
     }
 
     class MyPreferenceFragment : PreferenceFragment(){
+
+        // 화면꺼질때 브로드케스트 msg 수신하는 리시버
+        var receiver = ScreenOffReceiver()
+        val filter = IntentFilter(Intent.ACTION_SCREEN_OFF)
+        val filter2 = IntentFilter(Intent.ACTION_SCREEN_ON)
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
@@ -108,13 +114,24 @@ class SettingActivity : AppCompatActivity() {
                         Log.d("앱 사용여부", "체크됨")
 
                         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-                            activity.startForegroundService(Intent(activity, LockScreenService::class.java))
+                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                                activity.startForegroundService(Intent(activity, LockScreenService::class.java))
+                            } else {
+                                // 화면꺼질때 브로드케스트 msg 수신하는 리시버
+                                activity.registerReceiver(receiver, filter, RECEIVER_NOT_EXPORTED)
+                                activity.registerReceiver(receiver, filter2, RECEIVER_NOT_EXPORTED)
+
+                            }
+
                         }else{
                             activity.startService(Intent(activity, LockScreenService::class.java))
                         }
                     }
                     // 사용 체크 안됬으면 서비스 중단
-                    else -> activity.stopService(Intent(activity, LockScreenService::class.java))
+                    else -> {
+                        activity.stopService(Intent(activity, LockScreenService::class.java))
+                        activity.unregisterReceiver(receiver)
+                    }
                 }
 
                 true
@@ -123,7 +140,13 @@ class SettingActivity : AppCompatActivity() {
             // 앱이 시작됬을대 이미 퀴즈잠금화면 사용이 체크되어있으면 서비스 실행
             if(useLockScreenPref.isChecked){
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-                    activity.startForegroundService(Intent(activity, LockScreenService::class.java))
+                    if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                        activity.startForegroundService(Intent(activity, LockScreenService::class.java))
+                    } else {
+                        activity.registerReceiver(receiver, filter, RECEIVER_NOT_EXPORTED)
+                        activity.registerReceiver(receiver, filter2, RECEIVER_NOT_EXPORTED)
+
+                    }
                 }else{
                     activity.startService(Intent(activity, LockScreenService::class.java))
                 }
