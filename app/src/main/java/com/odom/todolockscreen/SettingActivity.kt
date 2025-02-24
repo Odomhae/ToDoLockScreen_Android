@@ -1,42 +1,78 @@
 package com.odom.todolockscreen
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.preference.ListPreference
-import android.preference.PreferenceFragment
-import android.preference.SwitchPreference
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
-import com.google.android.gms.ads.AdRequest
+import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreferenceCompat
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
-import com.google.android.gms.ads.MobileAds
-import kotlinx.android.synthetic.main.activity_setting.*
+import kotlinx.android.synthetic.main.activity_setting.closeImage
+import java.lang.String
+import kotlin.Boolean
+import kotlin.Exception
+
 
 class SettingActivity : AppCompatActivity() {
 
-    val fragment = MyPreferenceFragment()
-    // 광고
-    lateinit var mAdView : AdView
-    private val adSize: AdSize
-        get() {
-            val display = windowManager.defaultDisplay
-            val outMetrics = DisplayMetrics()
-            display.getMetrics(outMetrics)
+    companion object {
+        private var isReceiverRegistered = false
 
-            val density = outMetrics.density
-            val adWidthPixels = outMetrics.widthPixels.toFloat()
-            val adWidth = (adWidthPixels / density).toInt()
-            return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, adWidth)
+        private val receiver1: BroadcastReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                if (Intent.ACTION_SCREEN_ON == intent.action) {
+                    if (isReceiverEnabled(context)) {
+                        // Start the lock screen activity
+                        val lockIntent = Intent(context, ToDoLockScreenActivity::class.java)
+                        lockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        lockIntent.addFlags(Intent.FLAG_ACTIVITY_NO_USER_ACTION or Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                        context.startActivity(lockIntent)
+                    }
+                }
+            }
         }
+
+        private fun isReceiverEnabled(context: Context): Boolean {
+            val preferences = context.getSharedPreferences("LOCK", MODE_PRIVATE)
+            return preferences.getBoolean("isEnable", false)
+        }
+
+        fun enableReceiver(context: Context) {
+            val preferences = context.getSharedPreferences("LOCK", MODE_PRIVATE)
+            val editor = preferences.edit()
+            editor.putBoolean("isEnable", true)
+            editor.apply()
+
+            if (!isReceiverRegistered) {
+                val filter = IntentFilter(Intent.ACTION_SCREEN_ON)
+                context.registerReceiver(receiver1, filter)
+                isReceiverRegistered = true
+            }
+        }
+
+        private fun disableReceiver(context: Context) {
+            val preferences = context.getSharedPreferences("LOCK", MODE_PRIVATE)
+            val editor = preferences.edit()
+            editor.putBoolean("isEnable", false)
+            editor.apply()
+
+            if (isReceiverRegistered) {
+                try {
+                    context.unregisterReceiver(receiver1)
+                    isReceiverRegistered = false // Update the flag
+                } catch (e: Exception) {
+                    Log.d("====ttt error", e.message!!)
+                }
+            }
+        }
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,115 +81,75 @@ class SettingActivity : AppCompatActivity() {
         window.statusBarColor = resources.getColor(R.color.colorGray)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 
-        fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.frameLayout, SettingPreferencesFragment()).commit()
 
         closeImage.setOnClickListener {
             finish()
         }
     }
 
-    class MyPreferenceFragment : PreferenceFragment(){
+    class SettingPreferencesFragment : PreferenceFragmentCompat() {
+        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: kotlin.String?) {
+            setPreferencesFromResource(R.xml.pref, rootKey)
 
-        // 화면꺼질때 브로드케스트 msg 수신하는 리시버
-        var receiver = ScreenOffReceiver()
-        val filter = IntentFilter(Intent.ACTION_SCREEN_OFF)
-        val filter2 = IntentFilter(Intent.ACTION_SCREEN_ON)
+            val switchPreference = findPreference<SwitchPreferenceCompat>("useLockScreen")
+            val textColorPreference = findPreference<androidx.preference.ListPreference>("textColorCategory")
+            val listColorPreference = findPreference<androidx.preference.ListPreference>("listColorCategory")
+            val backGroundColorPreference = findPreference<androidx.preference.ListPreference>("backgroundColorCategory")
 
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
+            if (switchPreference?.isChecked!!) {
+                if(isReceiverEnabled(requireContext())) {
+                    switchPreference.isChecked = true
+                    enableReceiver(requireContext())
+                }
 
-            // 환경설정 리소스 파일
-            // xml 폴더의 pref 파일
-            addPreferencesFromResource(R.xml.pref)
+            }
+            textColorPreference?.summary = textColorPreference?.entries?.get(PreferenceSettings(requireContext()).textColor)
+            listColorPreference?.summary = listColorPreference?.entries?.get(PreferenceSettings(requireContext()).listColor)
+            backGroundColorPreference?.summary = backGroundColorPreference?.entries?.get(PreferenceSettings(requireContext()).backgroundColor)
+
+            // 사용여부
+            switchPreference.setOnPreferenceChangeListener { _, newValue ->
+                if (newValue == true) {
+                    enableReceiver(requireContext())
+                } else {
+                    disableReceiver(requireContext())
+                }
+                true
+            }
 
             // 글자색
-            val textColorCategoryPref = findPreference("textColorCategory") as ListPreference
-            textColorCategoryPref.summary = textColorCategoryPref.entries[PreferenceSettings(activity).textColor]
-            textColorCategoryPref.setOnPreferenceChangeListener { preference, newValue ->
+            textColorPreference?.setOnPreferenceChangeListener { _, newValue ->
+                textColorPreference.summary = newValue.toString()
 
-                val index = textColorCategoryPref.findIndexOfValue(newValue.toString())
-                PreferenceSettings(activity).textColor = index
-                textColorCategoryPref.summary = textColorCategoryPref.entries[index]
+                val index = textColorPreference.findIndexOfValue(newValue.toString())
+                PreferenceSettings(requireContext()).textColor = index
 
                 true
             }
 
             // 각 리스트 색
-            val listColorCategoryPref = findPreference("listColorCategory") as ListPreference
-            listColorCategoryPref.summary = listColorCategoryPref.entries[PreferenceSettings(activity).listColor]
-            listColorCategoryPref.setOnPreferenceChangeListener { preference, newValue ->
+            listColorPreference?.setOnPreferenceChangeListener { _, newValue ->
+                listColorPreference.summary = newValue.toString()
 
-                val index = listColorCategoryPref.findIndexOfValue(newValue.toString())
-                PreferenceSettings(activity).listColor = index
-                listColorCategoryPref.summary = listColorCategoryPref.entries[index]
+                val index = listColorPreference.findIndexOfValue(newValue.toString())
+                PreferenceSettings(requireContext()).listColor = index
 
                 true
             }
 
             // 배경색
-            val backgroundColorCategoryPref = findPreference("backgroundColorCategory") as ListPreference
-            backgroundColorCategoryPref.summary = backgroundColorCategoryPref.entries[PreferenceSettings(activity).backgroundColor]
-            backgroundColorCategoryPref.setOnPreferenceChangeListener { preference, newValue ->
+            backGroundColorPreference?.setOnPreferenceChangeListener { _, newValue ->
+                backGroundColorPreference.summary = newValue.toString()
 
-                val index = backgroundColorCategoryPref.findIndexOfValue(newValue.toString())
-                PreferenceSettings(activity).backgroundColor = index
-                backgroundColorCategoryPref.summary = backgroundColorCategoryPref.entries[index]
+                val index = backGroundColorPreference.findIndexOfValue(newValue.toString())
+                PreferenceSettings(requireContext()).backgroundColor = index
 
                 true
-            }
-
-
-            // 잠금화면 사용 스위치 객체 사용
-            // useLockScreen키로 찾음
-            val useLockScreenPref = findPreference("useLockScreen") as SwitchPreference
-
-            useLockScreenPref.setOnPreferenceClickListener {
-                when{
-                    // 퀴즈 잠금화면 사용이 체크된 경우 lockScreenService 실행
-                    useLockScreenPref.isChecked ->{
-                        Log.d("앱 사용여부", "체크됨")
-
-                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                                activity.startForegroundService(Intent(activity, LockScreenService::class.java))
-                            } else {
-                                // 화면꺼질때 브로드케스트 msg 수신하는 리시버
-                                activity.registerReceiver(receiver, filter, RECEIVER_NOT_EXPORTED)
-                                activity.registerReceiver(receiver, filter2, RECEIVER_NOT_EXPORTED)
-
-                            }
-
-                        }else{
-                            activity.startService(Intent(activity, LockScreenService::class.java))
-                        }
-                    }
-                    // 사용 체크 안됬으면 서비스 중단
-                    else -> {
-                        activity.stopService(Intent(activity, LockScreenService::class.java))
-                        activity.unregisterReceiver(receiver)
-                    }
-                }
-
-                true
-            }
-
-            // 앱이 시작됬을대 이미 퀴즈잠금화면 사용이 체크되어있으면 서비스 실행
-            if(useLockScreenPref.isChecked){
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-                    if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                        activity.startForegroundService(Intent(activity, LockScreenService::class.java))
-                    } else {
-                        activity.registerReceiver(receiver, filter, RECEIVER_NOT_EXPORTED)
-                        activity.registerReceiver(receiver, filter2, RECEIVER_NOT_EXPORTED)
-
-                    }
-                }else{
-                    activity.startService(Intent(activity, LockScreenService::class.java))
-                }
-
             }
 
         }
 
     }
+
 }
