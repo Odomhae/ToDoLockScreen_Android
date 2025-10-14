@@ -4,16 +4,22 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.OnApplyWindowInsetsListener
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
-import kotlinx.android.synthetic.main.activity_setting.closeImage
+import com.odom.todolockscreen.databinding.ActivitySettingBinding
 import java.lang.String
 import kotlin.Boolean
 import kotlin.Exception
@@ -74,16 +80,37 @@ class SettingActivity : AppCompatActivity() {
 
     }
 
+    private lateinit var binding: ActivitySettingBinding // 자동 생성된 바인딩 클래스
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_setting)
+
+        binding = ActivitySettingBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        val contentView: View = this.findViewById(android.R.id.content)
+        ViewCompat.setOnApplyWindowInsetsListener(contentView, object : OnApplyWindowInsetsListener {
+            override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat): WindowInsetsCompat {
+                val innerPadding = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
+                v.setPadding(0, innerPadding.top, 0, innerPadding.bottom)
+
+                return insets
+            }
+        })
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            val insetsController = WindowInsetsControllerCompat(window, window.decorView)
+            insetsController.isAppearanceLightStatusBars = false
+            //   insetsController.isAppearanceLightNavigationBars = isLightStatusBars
+        }
 
         window.statusBarColor = resources.getColor(R.color.colorGray)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 
         supportFragmentManager.beginTransaction().replace(R.id.frameLayout, SettingPreferencesFragment()).commit()
 
-        closeImage.setOnClickListener {
+        binding.closeImage.setOnClickListener {
             finish()
         }
     }

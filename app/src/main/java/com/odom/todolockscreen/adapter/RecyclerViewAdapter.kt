@@ -3,6 +3,7 @@ package com.odom.todolockscreen.adapter
 import android.content.Context
 import android.graphics.Color
 import android.util.Log
+import android.util.Log.v
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.odom.todolockscreen.PreferenceSettings
 import com.odom.todolockscreen.R
 import com.odom.todolockscreen.ToDoLockScreenActivity
-import kotlinx.android.synthetic.main.activity_to_do_locksceen.view.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -25,7 +25,7 @@ class RecyclerViewAdapter(private val context: Context, private var datas: Array
     private val newList = currentList.toMutableList()
 
     class MyViewHolder(view: View): RecyclerView.ViewHolder(view) {
-        var textField : TextView = view.recyclerview_text
+        var textField : TextView = view.findViewById<TextView>(R.id.recyclerview_text)
     }
 
     override fun getItemCount() = datas.size
@@ -35,28 +35,32 @@ class RecyclerViewAdapter(private val context: Context, private var datas: Array
 
         val textColor = PreferenceSettings(context).textColor
         val itemHolderColor = PreferenceSettings(context).listColor
+
+        val textField : TextView = view.findViewById<TextView>(R.id.recyclerview_text)
+        
+        
         // 글자색
         when(textColor){
-            0 -> view.recyclerview_text.setTextColor(Color.parseColor("#ffffff"))
-            1 -> view.recyclerview_text.setTextColor(Color.parseColor("#DCDCDC"))
-            2 -> view.recyclerview_text.setTextColor(Color.parseColor("#000000"))
-            3 -> view.recyclerview_text.setTextColor(Color.parseColor("#FF0023"))
-            4 -> view.recyclerview_text.setTextColor(Color.parseColor("#b80f0a"))
-            5 -> view.recyclerview_text.setTextColor(Color.parseColor("#FA8072"))
-            6 -> view.recyclerview_text.setTextColor(Color.parseColor("#F2DFD2"))
-            7 -> view.recyclerview_text.setTextColor(Color.parseColor("#f37021"))
-            8 -> view.recyclerview_text.setTextColor(Color.parseColor("#7c4700"))
-            9 -> view.recyclerview_text.setTextColor(Color.parseColor("#432711"))
-            10 -> view.recyclerview_text.setTextColor(Color.parseColor("#2C40DC"))
-            11 -> view.recyclerview_text.setTextColor(Color.parseColor("#ff89d3fb"))
-            12 -> view.recyclerview_text.setTextColor(Color.parseColor("#1CAE4C"))
-            13 -> view.recyclerview_text.setTextColor(Color.parseColor("#52D017"))
-            14 -> view.recyclerview_text.setTextColor(Color.parseColor("#69e0a5"))
-            15 -> view.recyclerview_text.setTextColor(Color.parseColor("#e8f321"))
-            16 -> view.recyclerview_text.setTextColor(Color.parseColor("#f987c5"))
-            17 -> view.recyclerview_text.setTextColor(Color.parseColor("#cc99ff"))
-            18 -> view.recyclerview_text.setTextColor(Color.parseColor("#FF00FF"))
-            19 -> view.recyclerview_text.setTextColor(Color.parseColor("#8b00ff"))
+            0 -> textField.setTextColor(Color.parseColor("#ffffff"))
+            1 -> textField.setTextColor(Color.parseColor("#DCDCDC"))
+            2 -> textField.setTextColor(Color.parseColor("#000000"))
+            3 -> textField.setTextColor(Color.parseColor("#FF0023"))
+            4 -> textField.setTextColor(Color.parseColor("#b80f0a"))
+            5 -> textField.setTextColor(Color.parseColor("#FA8072"))
+            6 -> textField.setTextColor(Color.parseColor("#F2DFD2"))
+            7 -> textField.setTextColor(Color.parseColor("#f37021"))
+            8 -> textField.setTextColor(Color.parseColor("#7c4700"))
+            9 -> textField.setTextColor(Color.parseColor("#432711"))
+            10 -> textField.setTextColor(Color.parseColor("#2C40DC"))
+            11 -> textField.setTextColor(Color.parseColor("#ff89d3fb"))
+            12 -> textField.setTextColor(Color.parseColor("#1CAE4C"))
+            13 -> textField.setTextColor(Color.parseColor("#52D017"))
+            14 -> textField.setTextColor(Color.parseColor("#69e0a5"))
+            15 -> textField.setTextColor(Color.parseColor("#e8f321"))
+            16 -> textField.setTextColor(Color.parseColor("#f987c5"))
+            17 -> textField.setTextColor(Color.parseColor("#cc99ff"))
+            18 -> textField.setTextColor(Color.parseColor("#FF00FF"))
+            19 -> textField.setTextColor(Color.parseColor("#8b00ff"))
         }
 
         // 아이템 색

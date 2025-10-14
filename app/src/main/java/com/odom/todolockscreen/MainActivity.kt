@@ -16,12 +16,16 @@ import android.widget.TextView.OnEditorActionListener
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.OnApplyWindowInsetsListener
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.size
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
-import kotlinx.android.synthetic.main.activity_main.*
+import com.odom.todolockscreen.databinding.ActivityMainBinding
 
 
 class MainActivity : AppCompatActivity(){
@@ -47,9 +51,29 @@ class MainActivity : AppCompatActivity(){
             return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, adWidth)
         }
 
+    private lateinit var binding: ActivityMainBinding // 자동 생성된 바인딩 클래스
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        val contentView: View = this.findViewById(android.R.id.content)
+        ViewCompat.setOnApplyWindowInsetsListener(contentView, object : OnApplyWindowInsetsListener {
+            override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat): WindowInsetsCompat {
+                val innerPadding = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
+                v.setPadding(0, innerPadding.top, 0, innerPadding.bottom)
+
+                return insets
+            }
+        })
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            val insetsController = WindowInsetsControllerCompat(window, window.decorView)
+            insetsController.isAppearanceLightStatusBars = false
+            //   insetsController.isAppearanceLightNavigationBars = isLightStatusBars
+        }
 
         window.statusBarColor = resources.getColor(R.color.colorGray)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
@@ -60,22 +84,22 @@ class MainActivity : AppCompatActivity(){
         checkPermission()
 
         // 설정
-        settingButton.setOnClickListener {
+        binding.settingButton.setOnClickListener {
             startActivity(Intent(this, SettingActivity::class.java))
         }
 
 
         // ArrayAdapter 생성. 아이템 View를 선택(single choice)가능하도록 만듦.
-        listView.adapter = adapter
-        listView.choiceMode = ListView.CHOICE_MODE_NONE
+        binding.listView.adapter = adapter
+        binding.listView.choiceMode = ListView.CHOICE_MODE_NONE
 
-        listView.setOnItemClickListener { parent, view, position, id ->
+        binding.listView.setOnItemClickListener { parent, view, position, id ->
             showBox(items, position)
             PreferenceSettings(this).listData = items
         }
 
         //할일 추가
-        addListButton.setOnClickListener { addList() }
+        binding.addListButton.setOnClickListener { addList() }
 
         // 이전 목록있으면 새로고침 전에도 넣어주시고
         val listPref = PreferenceSettings(this).listData
@@ -85,7 +109,7 @@ class MainActivity : AppCompatActivity(){
         }
 
         // 당겨서 새로고침
-        pullToRefresh.setOnRefreshListener {
+        binding.pullToRefresh.setOnRefreshListener {
             items.clear()
             adapter.notifyDataSetChanged()
             //  다시 채움
@@ -96,10 +120,10 @@ class MainActivity : AppCompatActivity(){
             }
 
             adapter.notifyDataSetChanged()
-            pullToRefresh.isRefreshing = false
+            binding.pullToRefresh.isRefreshing = false
         }
 
-        editText.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
+        binding.editText.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 addList()
                 return@OnEditorActionListener true
@@ -111,7 +135,7 @@ class MainActivity : AppCompatActivity(){
         // 배너 광고
         MobileAds.initialize(this) {}
         mAdView = AdView(this)
-        adMobView.addView(mAdView)
+        binding.adMobView.addView(mAdView)
         loadBanner()
     }
 
@@ -213,18 +237,18 @@ class MainActivity : AppCompatActivity(){
 
     // 할일 추가버튼 함수
     private fun addList(){
-        if(editText.text.isEmpty()){
+        if(binding.editText.text.isEmpty()){
             Toast.makeText(applicationContext, R.string.empty_input_message, Toast.LENGTH_SHORT).show()
         }
         // 빈 입력 아니면 추가
         else{
             // 텍스트 추가
-            items.add(editText.text.toString())
+            items.add(binding.editText.text.toString())
 
             // 배열로 저장
             PreferenceSettings(this).listData = items
 
-            editText.setText("")
+            binding.editText.setText("")
             adapter.notifyDataSetChanged()
         }
     }

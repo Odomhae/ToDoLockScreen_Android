@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.odom.todolockscreen.adapter.RecyclerViewAdapter
-import kotlinx.android.synthetic.main.activity_to_do_locksceen.*
-import kotlinx.android.synthetic.main.activity_to_do_locksceen.view.*
+import com.odom.todolockscreen.databinding.ActivitySettingBinding
+import com.odom.todolockscreen.databinding.ActivityToDoLocksceenBinding
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.system.exitProcess
@@ -29,6 +29,8 @@ class ToDoLockScreenActivity : AppCompatActivity() {
     // 앱 종료 여부 판단
     var finn = false
     var finBt = false
+
+    private lateinit var binding: ActivityToDoLocksceenBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +51,8 @@ class ToDoLockScreenActivity : AppCompatActivity() {
             window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD)
         }
 
-        setContentView(R.layout.activity_to_do_locksceen)
+        binding = ActivityToDoLocksceenBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         swipeToFinish()
 
         val listPref = PreferenceSettings(this).listData
@@ -62,11 +65,11 @@ class ToDoLockScreenActivity : AppCompatActivity() {
                 lockScreenItems.add(value)
             }
 
-            recyclerView.adapter = RecyclerViewAdapter(this, listPref)
+            binding.recyclerView.adapter = RecyclerViewAdapter(this, listPref)
 
             // 간격 30
             val spaceDecoration = VerticalSpaceItemDecoration(30)
-            recyclerView.addItemDecoration(spaceDecoration)
+            binding.recyclerView.addItemDecoration(spaceDecoration)
 
             initView()
         }
@@ -81,7 +84,7 @@ class ToDoLockScreenActivity : AppCompatActivity() {
 
         var endX = 0
         var endY = 0
-        lockScreenBackground.setOnTouchListener { v, event ->
+        binding.lockScreenBackground.setOnTouchListener { v, event ->
             when(event.action){
                 MotionEvent.ACTION_DOWN -> {
                     // 초기값
@@ -113,7 +116,7 @@ class ToDoLockScreenActivity : AppCompatActivity() {
     // 뷰 초기화
     fun initView() {
 
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
         //전체화면
         // window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
@@ -121,89 +124,89 @@ class ToDoLockScreenActivity : AppCompatActivity() {
         val backgroundColor = PreferenceSettings(this).backgroundColor
         when(backgroundColor){
             0 -> {
-                lockScreenBackground.setBackgroundColor(getColor(R.color.colorWhite))
+                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorWhite))
                 // 삳태바도 같은 색으로 api 21 이상
                 window.statusBarColor = getColor(R.color.colorWhite)
                 //상태바 글씨 보이게
                 window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
             }
             1 -> {
-                lockScreenBackground.setBackgroundColor(getColor(R.color.colorGray))
+                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorGray))
                 window.statusBarColor = getColor(R.color.colorGray)
                 window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
             }
             2 ->  {
-                lockScreenBackground.setBackgroundColor(getColor(R.color.colorBlack))
+                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorBlack))
                 window.statusBarColor = getColor(R.color.colorBlack)
             }
             3 ->  {
-                lockScreenBackground.setBackgroundColor(getColor(R.color.colorRed))
+                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorRed))
                 window.statusBarColor = getColor(R.color.colorRed)
             }
             4 -> {
-                lockScreenBackground.setBackgroundColor(getColor(R.color.colorCrimson))
+                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorCrimson))
                 window.statusBarColor = getColor(R.color.colorCrimson)
             }
             5 ->  {
-                lockScreenBackground.setBackgroundColor(getColor(R.color.colorSalmon))
+                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorSalmon))
                 window.statusBarColor = getColor(R.color.colorSalmon)
             }
             6 ->  {
-                lockScreenBackground.setBackgroundColor(getColor(R.color.colorBeige))
+                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorBeige))
                 window.statusBarColor = getColor(R.color.colorBeige)
                 window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
             }
             7 ->  {
-                lockScreenBackground.setBackgroundColor(getColor(R.color.colorOrange))
+                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorOrange))
                 window.statusBarColor = getColor(R.color.colorOrange)
             }
             8 ->  {
-                lockScreenBackground.setBackgroundColor(getColor(R.color.colorBrown))
+                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorBrown))
                 window.statusBarColor = getColor(R.color.colorBrown)
             }
             9 ->  {
-                lockScreenBackground.setBackgroundColor(getColor(R.color.colorWalnut))
+                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorWalnut))
                 window.statusBarColor = getColor(R.color.colorWalnut)
             }
             10 ->  {
-                lockScreenBackground.setBackgroundColor(getColor(R.color.colorBlue))
+                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorBlue))
                 window.statusBarColor = getColor(R.color.colorBlue)
             }
             11 ->  {
-                lockScreenBackground.setBackgroundColor(getColor(R.color.colorMalibu))
+                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorMalibu))
                 window.statusBarColor = getColor(R.color.colorMalibu)
             }
             12 ->  {
-                lockScreenBackground.setBackgroundColor(getColor(R.color.colorGreen))
+                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorGreen))
                 window.statusBarColor = getColor(R.color.colorGreen)
             }
             13 ->  {
-                lockScreenBackground.setBackgroundColor(getColor(R.color.colorYellowGreen))
+                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorYellowGreen))
                 window.statusBarColor = getColor(R.color.colorYellowGreen)
             }
             14 ->  {
-                lockScreenBackground.setBackgroundColor(getColor(R.color.colorMint))
+                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorMint))
                 window.statusBarColor = getColor(R.color.colorMint)
             }
             15 ->  {
-                lockScreenBackground.setBackgroundColor(getColor(R.color.colorYellow))
+                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorYellow))
                 window.statusBarColor = getColor(R.color.colorYellow)
                 window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
             }
             16 ->  {
-                lockScreenBackground.setBackgroundColor(getColor(R.color.colorPink))
+                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorPink))
                 window.statusBarColor = getColor(R.color.colorPink)
             }
             17 ->  {
-                lockScreenBackground.setBackgroundColor(getColor(R.color.colorViolet))
+                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorViolet))
                 window.statusBarColor = getColor(R.color.colorViolet)
             }
             18 ->  {
-                lockScreenBackground.setBackgroundColor(getColor(R.color.colorMagenta))
+                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorMagenta))
                 window.statusBarColor = getColor(R.color.colorMagenta)
             }
             19 ->  {
-                lockScreenBackground.setBackgroundColor(getColor(R.color.colorPurple))
+                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorPurple))
                 window.statusBarColor = getColor(R.color.colorPurple)
             }
         }
@@ -253,7 +256,7 @@ class ToDoLockScreenActivity : AppCompatActivity() {
                 val yesBt = mDialogView.findViewById(R.id.yesButton) as Button
                 yesBt.setOnClickListener {
                     //잠금화면에서 지우고
-                    (recyclerView.adapter as RecyclerViewAdapter).deleteList(viewHolder.adapterPosition)
+                    (binding.recyclerView.adapter as RecyclerViewAdapter).deleteList(viewHolder.adapterPosition)
 
                     lockScreenItems.removeAt(viewHolder.layoutPosition)
                     PreferenceSettings(this@ToDoLockScreenActivity).listData = lockScreenItems
@@ -287,7 +290,7 @@ class ToDoLockScreenActivity : AppCompatActivity() {
         }).apply {
 
             // ItemTouchHelper에 RecyclerView 설정
-            attachToRecyclerView(recyclerView)
+            attachToRecyclerView(binding.recyclerView)
         }
     }
 
