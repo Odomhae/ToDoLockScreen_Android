@@ -34,20 +34,15 @@ class TodoWidgetProvider : AppWidgetProvider() {
             views.setRemoteAdapter(R.id.widgetListView, serviceIntent)
             views.setEmptyView(R.id.widgetListView, R.id.widgetEmptyText)
 
-            // 헤더 탭 → MainActivity 열기
+            // 어디를 눌러도 MainActivity 열기
             val mainIntent = Intent(context, MainActivity::class.java)
-            val headerPendingIntent = PendingIntent.getActivity(
+            val mainPendingIntent = PendingIntent.getActivity(
                 context, 0, mainIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
-            views.setOnClickPendingIntent(R.id.widgetHeader, headerPendingIntent)
-
-            // 항목 탭 template → MainActivity 열기
-            val itemPendingIntent = PendingIntent.getActivity(
-                context, 1, mainIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
-            views.setPendingIntentTemplate(R.id.widgetListView, itemPendingIntent)
+            views.setOnClickPendingIntent(R.id.widgetRoot, mainPendingIntent)
+            views.setOnClickPendingIntent(R.id.widgetHeader, mainPendingIntent)
+            views.setPendingIntentTemplate(R.id.widgetListView, mainPendingIntent)
 
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }

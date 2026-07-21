@@ -15,7 +15,6 @@ import android.widget.*
 import android.widget.TextView.OnEditorActionListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.OnApplyWindowInsetsListener
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -56,21 +55,15 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
+
         val contentView: View = this.findViewById(android.R.id.content)
-        ViewCompat.setOnApplyWindowInsetsListener(contentView, object : OnApplyWindowInsetsListener {
-            override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat): WindowInsetsCompat {
-                val innerPadding = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
-                v.setPadding(0, innerPadding.top, 0, innerPadding.bottom)
-                return insets
-            }
-        })
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            val insetsController = WindowInsetsControllerCompat(window, window.decorView)
-            insetsController.isAppearanceLightStatusBars = false
+        ViewCompat.setOnApplyWindowInsetsListener(contentView) { v, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
+            binding.statusBarScrim.layoutParams = binding.statusBarScrim.layoutParams.also { it.height = bars.top }
+            v.setPadding(0, 0, 0, bars.bottom)
+            insets
         }
-
-        window.statusBarColor = resources.getColor(R.color.colorPrimaryDark)
 
         checkPermission()
 
@@ -134,7 +127,7 @@ class MainActivity : AppCompatActivity() {
     private fun preloadExitAd() {
         exitAdView = AdView(this).apply {
             adUnitId = resources.getString(R.string.TEST_banner_ad_unit_id)
-            setAdSize(AdSize.BANNER)
+            setAdSize(AdSize.MEDIUM_RECTANGLE)
             loadAd(AdRequest.Builder().build())
         }
     }

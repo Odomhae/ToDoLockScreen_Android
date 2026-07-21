@@ -52,4 +52,9 @@
     <string name="permission_denied_message">권한 거부됨</string>
     <string name="permission_set_message">권한 설정됨</string>
     <string name="app_name">할꺼</string>
+
+    <!-- exit dialog -->
+    <string name="exit_dialog_message">앱을 종료하시겠습니까?</string>
+    <string name="exit_confirm">종료</string>
+
 </resources>

@@ -8,9 +8,18 @@
     android:background="@color/colorBackground"
     tools:context=".MainActivity">
 
+    <View
+        android:id="@+id/statusBarScrim"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/colorPrimaryDark"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <LinearLayout
         android:id="@+id/mainLinearLayout1"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/statusBarScrim"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -19,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:adSize="BANNER"
-            app:adUnitId="@string/REAL_banner_ad_unit_id">
+            app:adUnitId="@string/TEST_banner_ad_unit_id">
         </com.google.android.gms.ads.AdView>
 
     </LinearLayout>

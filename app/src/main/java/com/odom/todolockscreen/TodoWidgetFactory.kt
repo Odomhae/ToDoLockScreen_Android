@@ -14,9 +14,15 @@ class TodoWidgetFactory(
     private var textColor = 0xFFFFFFFF.toInt()
     private var itemBgColor = 0xFF000000.toInt()
 
-    override fun onCreate() {}
+    override fun onCreate() {
+        loadData()
+    }
 
     override fun onDataSetChanged() {
+        loadData()
+    }
+
+    private fun loadData() {
         val pref = PreferenceSettings(context)
         items = pref.listData
         textColor = ColorPickerPreference.COLOR_CATEGORY[pref.textColor]
