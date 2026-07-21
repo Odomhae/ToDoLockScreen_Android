@@ -6,23 +6,16 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.OnApplyWindowInsetsListener
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.AdView
 import com.odom.todolockscreen.databinding.ActivitySettingBinding
-import java.lang.String
-import kotlin.Boolean
-import kotlin.Exception
 
 
 class SettingActivity : AppCompatActivity() {
@@ -120,63 +113,17 @@ class SettingActivity : AppCompatActivity() {
             setPreferencesFromResource(R.xml.pref, rootKey)
 
             val switchPreference = findPreference<SwitchPreferenceCompat>("useLockScreen")
-            val textColorPreference = findPreference<androidx.preference.ListPreference>("textColorCategory")
-            val listColorPreference = findPreference<androidx.preference.ListPreference>("listColorCategory")
-            val backGroundColorPreference = findPreference<androidx.preference.ListPreference>("backgroundColorCategory")
 
-            if (switchPreference?.isChecked!!) {
-                if(isReceiverEnabled(requireContext())) {
-                    switchPreference.isChecked = true
-                    enableReceiver(requireContext())
-                }
-
+            if (switchPreference?.isChecked == true && isReceiverEnabled(requireContext())) {
+                enableReceiver(requireContext())
             }
-            textColorPreference?.summary = textColorPreference?.entries?.get(PreferenceSettings(requireContext()).textColor)
-            listColorPreference?.summary = listColorPreference?.entries?.get(PreferenceSettings(requireContext()).listColor)
-            backGroundColorPreference?.summary = backGroundColorPreference?.entries?.get(PreferenceSettings(requireContext()).backgroundColor)
 
-            // 사용여부
-            switchPreference.setOnPreferenceChangeListener { _, newValue ->
-                if (newValue == true) {
-                    enableReceiver(requireContext())
-                } else {
-                    disableReceiver(requireContext())
-                }
+            switchPreference?.setOnPreferenceChangeListener { _, newValue ->
+                if (newValue == true) enableReceiver(requireContext())
+                else disableReceiver(requireContext())
                 true
             }
-
-            // 글자색
-            textColorPreference?.setOnPreferenceChangeListener { _, newValue ->
-                textColorPreference.summary = newValue.toString()
-
-                val index = textColorPreference.findIndexOfValue(newValue.toString())
-                PreferenceSettings(requireContext()).textColor = index
-
-                true
-            }
-
-            // 각 리스트 색
-            listColorPreference?.setOnPreferenceChangeListener { _, newValue ->
-                listColorPreference.summary = newValue.toString()
-
-                val index = listColorPreference.findIndexOfValue(newValue.toString())
-                PreferenceSettings(requireContext()).listColor = index
-
-                true
-            }
-
-            // 배경색
-            backGroundColorPreference?.setOnPreferenceChangeListener { _, newValue ->
-                backGroundColorPreference.summary = newValue.toString()
-
-                val index = backGroundColorPreference.findIndexOfValue(newValue.toString())
-                PreferenceSettings(requireContext()).backgroundColor = index
-
-                true
-            }
-
         }
-
     }
 
 }

@@ -1,33 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <SwitchPreferenceCompat
         android:defaultValue="false"
+        android:key="useLockScreen"
         android:summaryOff="@string/app_disabled"
         android:summaryOn="@string/app_activated"
-        android:key="useLockScreen"
         android:title="@string/app_activation" />
 
-    <ListPreference
-        android:defaultValue="1"
-        android:entries="@array/colorCategory"
-        android:entryValues="@array/colorCategory"
+    <com.odom.todolockscreen.ColorPickerPreference
         android:key="textColorCategory"
         android:title="@string/text_color" />
 
-    <ListPreference
-        android:defaultValue="1"
-        android:entries="@array/listColorCategory"
-        android:entryValues="@array/listColorCategory"
+    <com.odom.todolockscreen.ColorPickerPreference
         android:key="listColorCategory"
         android:title="@string/list_color" />
 
-    <ListPreference
-        android:defaultValue="1"
-        android:entries="@array/colorCategory"
-        android:entryValues="@array/colorCategory"
+    <com.odom.todolockscreen.ColorPickerPreference
         android:key="backgroundColorCategory"
         android:title="@string/background_color" />
 
