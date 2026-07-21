@@ -105,8 +105,8 @@ class SettingActivity : AppCompatActivity() {
             //   insetsController.isAppearanceLightNavigationBars = isLightStatusBars
         }
 
-        window.statusBarColor = resources.getColor(R.color.colorGray)
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        window.statusBarColor = resources.getColor(R.color.colorPrimaryDark)
+        window.decorView.systemUiVisibility = 0
 
         supportFragmentManager.beginTransaction().replace(R.id.frameLayout, SettingPreferencesFragment()).commit()
 
