@@ -94,6 +94,7 @@ class ColorPickerPreference @JvmOverloads constructor(
             "listColorCategory" -> pref.listColor = index
             "backgroundColorCategory" -> pref.backgroundColor = index
         }
+        TodoWidgetProvider.notifyWidget(context)
     }
 
     override fun onBindViewHolder(holder: PreferenceViewHolder) {

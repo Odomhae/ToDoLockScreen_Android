@@ -175,6 +175,7 @@ class MainActivity : AppCompatActivity() {
             PreferenceSettings(this).listData = list
             todoAdapter.notifyDataSetChanged()
             mAlertDialog.dismiss()
+            TodoWidgetProvider.notifyWidget(this)
         }
 
         btDelete.setOnClickListener {
@@ -186,6 +187,7 @@ class MainActivity : AppCompatActivity() {
                     todoAdapter.notifyItemRemoved(position)
                     todoAdapter.notifyItemRangeChanged(position, list.size)
                     mAlertDialog.dismiss()
+                    TodoWidgetProvider.notifyWidget(this)
                 }
                 .setNegativeButton(R.string.cancel) { _, _ ->
                     mAlertDialog.dismiss()
@@ -202,6 +204,7 @@ class MainActivity : AppCompatActivity() {
             PreferenceSettings(this).listData = items
             binding.editText.setText("")
             todoAdapter.notifyItemInserted(items.size - 1)
+            TodoWidgetProvider.notifyWidget(this)
         }
     }
 }
