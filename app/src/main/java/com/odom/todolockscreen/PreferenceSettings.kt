@@ -50,4 +50,9 @@ class PreferenceSettings(context: Context) {
         get() = prefs.getInt("backgroundColor", 0)
         set(value) = prefs.edit().putInt("backgroundColor", value).apply()
 
+    // 색 변경 횟수 (전면광고용)
+    var colorChangeCount : Int
+        get() = prefs.getInt("colorChangeCount", 0)
+        set(value) = prefs.edit().putInt("colorChangeCount", value).apply()
+
 }

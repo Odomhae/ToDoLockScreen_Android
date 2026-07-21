@@ -100,6 +100,10 @@
     <string name="ok">OK</string>
     <string name="app_settings">Settings</string>
 
+    <!-- exit dialog -->
+    <string name="exit_dialog_message">Exit the app?</string>
+    <string name="exit_confirm">Exit</string>
+
     <!-- mainActivity.kt -->
     <string name="empty_input_message">Empty input</string>
     <string name="permission_denied_message">Permission denied</string>

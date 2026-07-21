@@ -35,6 +35,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var todoAdapter: TodoMainAdapter
     lateinit var mAdView: AdView
+    private var exitAdView: AdView? = null
+
     private val adSize: AdSize
         get() {
             val display = windowManager.defaultDisplay
@@ -113,17 +115,64 @@ class MainActivity : AppCompatActivity() {
 
         binding.addListButton.setOnClickListener { addList() }
 
-        // 배너 광고
+        // 배너 광고 초기화
         MobileAds.initialize(this) {}
         mAdView = AdView(this)
         binding.adMobView.addView(mAdView)
         loadBanner()
+
+        // 종료 다이얼로그용 배너 미리 로드
+        preloadExitAd()
     }
 
     private fun loadBanner() {
-        mAdView.adUnitId = resources.getString(R.string.REAL_banner_ad_unit_id)
+        mAdView.adUnitId = resources.getString(R.string.TEST_banner_ad_unit_id)
         mAdView.setAdSize(adSize)
         mAdView.loadAd(AdRequest.Builder().build())
+    }
+
+    private fun preloadExitAd() {
+        exitAdView = AdView(this).apply {
+            adUnitId = resources.getString(R.string.TEST_banner_ad_unit_id)
+            setAdSize(AdSize.BANNER)
+            loadAd(AdRequest.Builder().build())
+        }
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        showExitDialog()
+    }
+
+    private fun showExitDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_exit, null)
+        val adContainer = dialogView.findViewById<FrameLayout>(R.id.exitDialogAdContainer)
+
+        // 미리 로드된 배너를 다이얼로그에 삽입
+        exitAdView?.let { adView ->
+            (adView.parent as? ViewGroup)?.removeView(adView)
+            adContainer.addView(adView)
+        }
+
+        val dialog = MaterialAlertDialogBuilder(this)
+            .setView(dialogView)
+            .create()
+        dialog.show()
+
+        dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.exitDialogCancel)
+            .setOnClickListener { dialog.dismiss() }
+
+        dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.exitDialogConfirm)
+            .setOnClickListener {
+                dialog.dismiss()
+                finish()
+            }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        exitAdView?.destroy()
+        mAdView.destroy()
     }
 
     private fun checkPermission() {

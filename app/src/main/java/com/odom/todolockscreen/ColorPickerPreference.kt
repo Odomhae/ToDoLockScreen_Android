@@ -1,6 +1,8 @@
 package com.odom.todolockscreen
 
+import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
@@ -10,6 +12,10 @@ import android.widget.GridLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.preference.Preference
 import androidx.preference.PreferenceViewHolder
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class ColorPickerPreference @JvmOverloads constructor(
@@ -95,6 +101,34 @@ class ColorPickerPreference @JvmOverloads constructor(
             "backgroundColorCategory" -> pref.backgroundColor = index
         }
         TodoWidgetProvider.notifyWidget(context)
+
+        val newCount = pref.colorChangeCount + 1
+        pref.colorChangeCount = newCount
+        if (newCount % 5 == 0) showInterstitialAd()
+    }
+
+    private fun showInterstitialAd() {
+        val activity = findActivity(context) ?: return
+        InterstitialAd.load(
+            context,
+            context.getString(R.string.TEST_fullscreen_ad_unit_id),
+            AdRequest.Builder().build(),
+            object : InterstitialAdLoadCallback() {
+                override fun onAdLoaded(ad: InterstitialAd) {
+                    ad.show(activity)
+                }
+                override fun onAdFailedToLoad(error: LoadAdError) {}
+            }
+        )
+    }
+
+    private fun findActivity(context: Context): Activity? {
+        var ctx = context
+        while (ctx is ContextWrapper) {
+            if (ctx is Activity) return ctx
+            ctx = ctx.baseContext
+        }
+        return null
     }
 
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
