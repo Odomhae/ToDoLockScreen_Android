@@ -3,12 +3,12 @@ apply plugin: 'org.jetbrains.kotlin.android'
 
 android {
     namespace 'com.odom.todolockscreen'
-    compileSdkVersion 35
+    compileSdkVersion 36
     buildToolsVersion "35.0.0"
     defaultConfig {
         applicationId "com.odom.todolockscreen"
         minSdkVersion 23
-        targetSdkVersion 35
+        targetSdkVersion 36
         versionCode 10
         versionName "1.9"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

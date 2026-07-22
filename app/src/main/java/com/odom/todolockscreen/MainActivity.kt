@@ -13,6 +13,8 @@ import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.*
 import android.widget.TextView.OnEditorActionListener
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -30,7 +32,6 @@ import com.odom.todolockscreen.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
 
     val items = ArrayList<String>()
-    private val PermissionsCode = 100
 
     private lateinit var todoAdapter: TodoMainAdapter
     lateinit var mAdView: AdView
@@ -38,14 +39,36 @@ class MainActivity : AppCompatActivity() {
 
     private val adSize: AdSize
         get() {
-            val display = windowManager.defaultDisplay
-            val outMetrics = DisplayMetrics()
-            display.getMetrics(outMetrics)
-            val density = outMetrics.density
-            val adWidthPixels = outMetrics.widthPixels.toFloat()
-            val adWidth = (adWidthPixels / density).toInt()
+            val adWidth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                val bounds = windowManager.currentWindowMetrics.bounds
+                (bounds.width() / resources.displayMetrics.density).toInt()
+            } else {
+                @Suppress("DEPRECATION")
+                val outMetrics = DisplayMetrics()
+                @Suppress("DEPRECATION")
+                windowManager.defaultDisplay.getMetrics(outMetrics)
+                (outMetrics.widthPixels / outMetrics.density).toInt()
+            }
             return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, adWidth)
         }
+
+    private val overlayPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { _ ->
+        if (Settings.canDrawOverlays(this)) {
+            Log.d("TAG", "권한 설정됨")
+            val toast = Toast.makeText(applicationContext, R.string.permission_set_message, Toast.LENGTH_LONG)
+            toast.setGravity(Gravity.TOP, Gravity.CENTER, 550)
+            toast.show()
+            onResume()
+        } else {
+            Log.d("TAG", "권한 거절됨")
+            finish()
+            val toast = Toast.makeText(applicationContext, R.string.permission_denied_message, Toast.LENGTH_LONG)
+            toast.setGravity(Gravity.TOP, Gravity.CENTER, 550)
+            toast.show()
+        }
+    }
 
     private lateinit var binding: ActivityMainBinding
 
@@ -64,6 +87,10 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(0, 0, 0, bars.bottom)
             insets
         }
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() { showExitDialog() }
+        })
 
         checkPermission()
 
@@ -132,11 +159,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {
-        showExitDialog()
-    }
-
     private fun showExitDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_exit, null)
         val adContainer = dialogView.findViewById<FrameLayout>(R.id.exitDialogAdContainer)
@@ -178,30 +200,11 @@ class MainActivity : AppCompatActivity() {
     private fun checkPermission() {
         if (!Settings.canDrawOverlays(this)) {
             val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
-            startActivityForResult(intent, PermissionsCode)
+            overlayPermissionLauncher.launch(intent)
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 1000)
-            }
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PermissionsCode) {
-            if (Settings.canDrawOverlays(this)) {
-                Log.d("TAG", "권한 설정됨")
-                val toast = Toast.makeText(applicationContext, R.string.permission_set_message, Toast.LENGTH_LONG)
-                toast.setGravity(Gravity.TOP, Gravity.CENTER, 550)
-                toast.show()
-                onResume()
-            } else {
-                Log.d("TAG", "권한 거절됨")
-                finish()
-                val toast = Toast.makeText(applicationContext, R.string.permission_denied_message, Toast.LENGTH_LONG)
-                toast.setGravity(Gravity.TOP, Gravity.CENTER, 550)
-                toast.show()
             }
         }
     }

@@ -95,7 +95,7 @@ class SettingActivity : AppCompatActivity() {
         }
 
         WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
-        window.statusBarColor = resources.getColor(R.color.colorPrimaryDark)
+        window.statusBarColor = androidx.core.content.ContextCompat.getColor(this, R.color.colorPrimaryDark)
 
         supportFragmentManager.beginTransaction().replace(R.id.frameLayout, SettingPreferencesFragment()).commit()
 

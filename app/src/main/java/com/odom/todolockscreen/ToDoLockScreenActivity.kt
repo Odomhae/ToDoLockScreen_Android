@@ -13,8 +13,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.odom.todolockscreen.adapter.RecyclerViewAdapter
-import com.odom.todolockscreen.databinding.ActivitySettingBinding
 import com.odom.todolockscreen.databinding.ActivityToDoLocksceenBinding
 import java.util.*
 import kotlin.collections.ArrayList
@@ -120,95 +122,39 @@ class ToDoLockScreenActivity : AppCompatActivity() {
         //전체화면
         // window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
-        // 배경색
         val backgroundColor = PreferenceSettings(this).backgroundColor
-        when(backgroundColor){
-            0 -> {
-                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorWhite))
-                // 삳태바도 같은 색으로 api 21 이상
-                window.statusBarColor = getColor(R.color.colorWhite)
-                //상태바 글씨 보이게
-                window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-            }
-            1 -> {
-                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorGray))
-                window.statusBarColor = getColor(R.color.colorGray)
-                window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-            }
-            2 ->  {
-                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorBlack))
-                window.statusBarColor = getColor(R.color.colorBlack)
-            }
-            3 ->  {
-                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorRed))
-                window.statusBarColor = getColor(R.color.colorRed)
-            }
-            4 -> {
-                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorCrimson))
-                window.statusBarColor = getColor(R.color.colorCrimson)
-            }
-            5 ->  {
-                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorSalmon))
-                window.statusBarColor = getColor(R.color.colorSalmon)
-            }
-            6 ->  {
-                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorBeige))
-                window.statusBarColor = getColor(R.color.colorBeige)
-                window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-            }
-            7 ->  {
-                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorOrange))
-                window.statusBarColor = getColor(R.color.colorOrange)
-            }
-            8 ->  {
-                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorBrown))
-                window.statusBarColor = getColor(R.color.colorBrown)
-            }
-            9 ->  {
-                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorWalnut))
-                window.statusBarColor = getColor(R.color.colorWalnut)
-            }
-            10 ->  {
-                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorBlue))
-                window.statusBarColor = getColor(R.color.colorBlue)
-            }
-            11 ->  {
-                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorMalibu))
-                window.statusBarColor = getColor(R.color.colorMalibu)
-            }
-            12 ->  {
-                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorGreen))
-                window.statusBarColor = getColor(R.color.colorGreen)
-            }
-            13 ->  {
-                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorYellowGreen))
-                window.statusBarColor = getColor(R.color.colorYellowGreen)
-            }
-            14 ->  {
-                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorMint))
-                window.statusBarColor = getColor(R.color.colorMint)
-            }
-            15 ->  {
-                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorYellow))
-                window.statusBarColor = getColor(R.color.colorYellow)
-                window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-            }
-            16 ->  {
-                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorPink))
-                window.statusBarColor = getColor(R.color.colorPink)
-            }
-            17 ->  {
-                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorViolet))
-                window.statusBarColor = getColor(R.color.colorViolet)
-            }
-            18 ->  {
-                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorMagenta))
-                window.statusBarColor = getColor(R.color.colorMagenta)
-            }
-            19 ->  {
-                binding.lockScreenBackground.setBackgroundColor(getColor(R.color.colorPurple))
-                window.statusBarColor = getColor(R.color.colorPurple)
-            }
+        val bgColor = when (backgroundColor) {
+            0  -> getColor(R.color.colorWhite)
+            1  -> getColor(R.color.colorGray)
+            2  -> getColor(R.color.colorBlack)
+            3  -> getColor(R.color.colorRed)
+            4  -> getColor(R.color.colorCrimson)
+            5  -> getColor(R.color.colorSalmon)
+            6  -> getColor(R.color.colorBeige)
+            7  -> getColor(R.color.colorOrange)
+            8  -> getColor(R.color.colorBrown)
+            9  -> getColor(R.color.colorWalnut)
+            10 -> getColor(R.color.colorBlue)
+            11 -> getColor(R.color.colorMalibu)
+            12 -> getColor(R.color.colorGreen)
+            13 -> getColor(R.color.colorYellowGreen)
+            14 -> getColor(R.color.colorMint)
+            15 -> getColor(R.color.colorYellow)
+            16 -> getColor(R.color.colorPink)
+            17 -> getColor(R.color.colorViolet)
+            18 -> getColor(R.color.colorMagenta)
+            else -> getColor(R.color.colorPurple)
+        }
+        // 밝은 배경색(흰, 회색, 베이지, 노랑)은 상태바 아이콘을 어둡게
+        val lightStatusBar = backgroundColor in setOf(0, 1, 6, 15)
+
+        binding.lockScreenBackground.setBackgroundColor(bgColor)
+        WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = lightStatusBar
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.lockScreenBackground) { v, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
+            v.setPadding(0, bars.top, 0, bars.bottom)
+            insets
         }
 
         // ItemTouchHelper 구현 (SDK Version 22부터 사용 가능)
