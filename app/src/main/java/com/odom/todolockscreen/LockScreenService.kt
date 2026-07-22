@@ -5,6 +5,7 @@ import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.ServiceInfo
 import android.graphics.Color
 import android.os.Build
 import android.os.IBinder
@@ -48,37 +49,31 @@ class LockScreenService :Service(){
             }
         }
 
-        // TargetSdk 34부터 포그라운드 권한 설정하면 스토어에 영상찍어서 업로드해야함 ,,
-        // 안드로이드 오레오 버전부터 백그라운드 제약이 잇어 포그라운드 서비스 실행
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE){
-            // Notification(상단알림) 채널 설정
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val chan = NotificationChannel(ANDROID_CHANNEL_ID, "MyService", NotificationManager.IMPORTANCE_NONE)
             chan.lightColor = Color.BLUE
             chan.lockscreenVisibility = Notification.VISIBILITY_PRIVATE
 
-            // Notification 서비스 객체 가져옴
             val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             manager.createNotificationChannel(chan)
 
-            // Notification 알림 객체 설정
-            val builder = Notification.Builder(this, ANDROID_CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher_foreground)
-
-            // 클릭시 메인 엑티비티로 이동
             val intentToMain = Intent(this, MainActivity::class.java)
             val pendingIntent = PendingIntent.getActivity(this, 0, intentToMain, PendingIntent.FLAG_IMMUTABLE)
-            // 클릭시 설정 엑티비티로 이동
             val intentToSetting = Intent(this, SettingActivity::class.java)
-            val pendingIntent2 = PendingIntent.getActivity(this, 0, intentToSetting, PendingIntent.FLAG_IMMUTABLE)
+            val pendingIntent2 = PendingIntent.getActivity(this, 1, intentToSetting, PendingIntent.FLAG_IMMUTABLE)
 
-            builder.setContentIntent(pendingIntent)
-            builder.addAction(android.R.drawable.ic_menu_view, resources.getString(R.string.view_app), pendingIntent)
-            builder.addAction(android.R.drawable.ic_menu_view, resources.getString(R.string.setting_app), pendingIntent2)
+            val notification = Notification.Builder(this, ANDROID_CHANNEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher_foreground)
+                .setContentIntent(pendingIntent)
+                .addAction(android.R.drawable.ic_menu_view, resources.getString(R.string.view_app), pendingIntent)
+                .addAction(android.R.drawable.ic_menu_view, resources.getString(R.string.setting_app), pendingIntent2)
+                .build()
 
-            val notification = builder.build()
-
-            // Notification 알림과 함께 포그라운드 서비스 시작
-            startForeground(NOTIFICATION_ID, notification)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
+            } else {
+                startForeground(NOTIFICATION_ID, notification)
+            }
         }
 
         return START_REDELIVER_INTENT

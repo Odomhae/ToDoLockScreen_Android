@@ -260,6 +260,7 @@ class ToDoLockScreenActivity : AppCompatActivity() {
 
                     lockScreenItems.removeAt(viewHolder.layoutPosition)
                     PreferenceSettings(this@ToDoLockScreenActivity).listData = lockScreenItems
+                    TodoWidgetProvider.notifyWidget(this@ToDoLockScreenActivity)
 
                     mAlertDialog.dismiss()
 

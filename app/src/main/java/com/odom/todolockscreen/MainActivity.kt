@@ -162,6 +162,13 @@ class MainActivity : AppCompatActivity() {
             }
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (SettingActivity.isReceiverEnabled(this)) {
+            SettingActivity.enableReceiver(this)
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         exitAdView?.destroy()
