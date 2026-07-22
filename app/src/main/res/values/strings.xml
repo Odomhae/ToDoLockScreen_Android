@@ -76,6 +76,7 @@
 
     <string name="REAL_admob_app_id"> ca-app-pub-6729344454320392~2351708278</string>
     <string name="REAL_banner_ad_unit_id">ca-app-pub-6729344454320392/5043377227</string>
+    <string name="REAL_fullscreen_ad_unit_id">ca-app-pub-6729344454320392/6845014442</string>
 
 
     <!-- main.xml-->
